@@ -12,11 +12,11 @@ const generateRandomString = length => {
   const generateUserCredentials = length => {
     const baseString = generateRandomString(length);
   
-    const username = baseString;
-    const email = `${baseString}@gmail.com`;
-    const password = `${baseString}123`;
+    const username1 = baseString;
+    const email1 = `${baseString}@gmail.com`;
+    const password1 = `${baseString}123`;
   
-    return { username, email, password };
+    return { username1, email1, password1 };
   };
 
 const VALID_USER_CREDENTIALS = {
