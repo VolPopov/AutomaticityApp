@@ -1,14 +1,3 @@
-const VALID_USER_CREDENTIALS = {
-    VALID_EMAIL: "filip@test.com", 
-    VALID_PASSWORD: "test123",
-};
-
-const INVALID_USER_CREDENTIALS = {
-    INCORRECT_PASSWORD_FOR_VALID_USER: "wrong1212", 
-    INVALID_MAIL_FORMAT: "mailWithNoAtSymbol.com", 
-    VALID_MAIL_BUT_NOT_REGISTERED: "thisMailIsNotRegistered@gmail.com", 
-};
-
 const generateRandomString = length => {
     const characters =
       'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
@@ -29,5 +18,20 @@ const generateRandomString = length => {
   
     return { username, email, password };
   };
+
+const VALID_USER_CREDENTIALS = {
+    VALID_USERNAME: "filip", 
+    VALID_EMAIL: "filip@test.com", 
+    VALID_PASSWORD: "test123",
+};
+
+const INVALID_USER_CREDENTIALS = {
+    INCORRECT_PASSWORD_FOR_VALID_USER: "wrong1212", 
+    INVALID_MAIL_FORMAT: "mailWithNoAtSymbol.com", 
+    VALID_MAIL_BUT_NOT_REGISTERED: "thisMailIsNotRegistered@gmail.com", 
+    SHORT_PASSWORD: "Pas", 
+    
+    
+};
 
 export {VALID_USER_CREDENTIALS, INVALID_USER_CREDENTIALS, generateUserCredentials}

@@ -30,8 +30,8 @@ test.describe("Login API tests", () => {
 
   test("Attempt to log in with invalid mail format", async ({}) => {
     const response = await loginAPI.login(INVALID_USER_CREDENTIALS["INVALID_MAIL_FORMAT"], VALID_USER_CREDENTIALS["VALID_PASSWORD"]);
-    expect(response.message).toBe(ERROR_MESSAGES["INVALID_MAIL_FORMAT"]);
-    expect(response.errors.email).toContain(ERROR_MESSAGES["INVALID_MAIL_FORMAT"]);
+    expect(response.message).toBe(ERROR_MESSAGES["INVALID_MAIL_FORMAT_FOR_LOGIN"]);
+    expect(response.errors.email).toContain(ERROR_MESSAGES["INVALID_MAIL_FORMAT_FOR_LOGIN"]);
   });
 
   test("Attempt to log in with valid email address that has not been registered", async ({}) => {
