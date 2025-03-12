@@ -11,31 +11,31 @@ test.describe("Login API tests", () => {
   });
   
   test("Attempt to log in with no credentials of any kind", async ({}) => {
-    const response = await loginAPI.login({email: "", password: ""});
+    const response = await loginAPI.login({email: "", password: "", statusCode: 422});
     expect(response.message).toBe(ERROR_MESSAGES["EMAIL_AND_PASSWORD_BOTH_MISSING"]);
     expect(response.errors.email).toContain(ERROR_MESSAGES["EMAIL_MISSING"]);
     expect(response.errors.password).toContain(ERROR_MESSAGES["PASSWORD_MISSING"]);
   });
 
   test("Attempt to log in with no password", async ({}) => {
-    const response = await loginAPI.login({password: ""});
+    const response = await loginAPI.login({password: "", statusCode: 422});
     expect(response.message).toBe(ERROR_MESSAGES["PASSWORD_MISSING"]);
     expect(response.errors.password).toContain(ERROR_MESSAGES["PASSWORD_MISSING"]);
   });
 
   test("Attempt to log in with a correct mail, but the wrong password", async ({}) => {
-    const response = await loginAPI.login({password:INVALID_USER_CREDENTIALS["INCORRECT_PASSWORD_FOR_VALID_USER"]});
+    const response = await loginAPI.login({password:INVALID_USER_CREDENTIALS["INCORRECT_PASSWORD_FOR_VALID_USER"], statusCode: 401});
     expect(response.error).toBe(ERROR_MESSAGES["UNAUTHORIZED"]);
   });
 
   test("Attempt to log in with invalid mail format", async ({}) => {
-    const response = await loginAPI.login({email: INVALID_USER_CREDENTIALS["INVALID_MAIL_FORMAT"]});
+    const response = await loginAPI.login({email: INVALID_USER_CREDENTIALS["INVALID_MAIL_FORMAT"], statusCode: 422});
     expect(response.message).toBe(ERROR_MESSAGES["INVALID_MAIL_FORMAT_FOR_LOGIN"]);
     expect(response.errors.email).toContain(ERROR_MESSAGES["INVALID_MAIL_FORMAT_FOR_LOGIN"]);
   });
 
   test("Attempt to log in with valid email address that has not been registered", async ({}) => {
-    const response = await loginAPI.login({email: INVALID_USER_CREDENTIALS["VALID_MAIL_BUT_NOT_REGISTERED"]});
+    const response = await loginAPI.login({email: INVALID_USER_CREDENTIALS["VALID_MAIL_BUT_NOT_REGISTERED"], statusCode: 401});
     expect(response.error).toBe(ERROR_MESSAGES["UNAUTHORIZED"]);
   });
 
