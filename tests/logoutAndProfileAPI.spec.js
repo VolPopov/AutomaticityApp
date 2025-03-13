@@ -20,4 +20,8 @@ test.describe("Logout and profile checking tests", () => {
     test("Succesful profile get", async ({}) => {
         await loginAPI.profile({ token: bearerToken, username: VALID_USER_CREDENTIALS["VALID_USERNAME"], email: VALID_USER_CREDENTIALS["VALID_EMAIL"] });
     });
+
+    test("Succesful refresh of token", async ({}) => {
+        await loginAPI.refresh({ token: bearerToken })
+    });
 });

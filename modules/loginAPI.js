@@ -129,5 +129,28 @@ export class LoginAPI {
         expect(responseJSON.email).toBe(email);
       }
     }
+
+    async refresh({
+      statusCode = 200, 
+      token, 
+    }) {
+      let response = await this.page.request.post("api/v1/auth/refresh", {
+        headers: { Accept: "application/json", Authorization: `Bearer ${token}`}
+      });
+
+      expect(response.status()).toBe(statusCode);
+      let responseJSON = await response.json();
+      
+      if(response.status() == 200) {
+        expect(responseJSON).toEqual({
+          access_token: expect.stringMatching(/^[A-Za-z0-9-_]+\.[A-Za-z0-9-_]+\.[A-Za-z0-9-_.+/]*$/), 
+          token_type: expect.stringMatching("bearer"), 
+          expires_in: expect.any(Number), 
+        });
+      }
+
+      console.log(responseJSON);
+      return responseJSON;
+    }
   }
   
