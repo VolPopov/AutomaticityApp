@@ -32,14 +32,14 @@ export class RegisterAPI {
           message: expect.any(String), 
           user: {
             username: expect.any(String), 
-            email: expect.any(String), 
+            email: expect.stringMatching(/^[^\s@]+@[^\s@]+\.[^\s@]+$/), 
             password: expect.any(String), 
             updated_at: expect.any(String), 
             created_at: expect.any(String), 
             id: expect.any(Number), 
           }, 
           auth: {
-            token: expect.any(String), 
+            token: expect.stringMatching(/^[A-Za-z0-9-_]+\.[A-Za-z0-9-_]+\.[A-Za-z0-9-_.+/]*$/), 
             type: expect.stringMatching("Bearer"),
           }
         });

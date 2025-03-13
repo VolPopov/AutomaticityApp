@@ -31,14 +31,14 @@ export class LoginAPI {
           user: {
             id: expect.any(Number), 
             username: expect.any(String), 
-            email: expect.any(String), 
+            email: expect.stringMatching(/^[^\s@]+@[^\s@]+\.[^\s@]+$/), 
             email_verified_at: null, 
             password: expect.any(String), 
             created_at: expect.any(String), 
             updated_at: expect.any(String), 
           }, 
           auth: {
-            token: expect.any(String), 
+            token: expect.stringMatching(/^[A-Za-z0-9-_]+\.[A-Za-z0-9-_]+\.[A-Za-z0-9-_.+/]*$/), 
             type: expect.stringMatching("Bearer"), 
           }
         });
