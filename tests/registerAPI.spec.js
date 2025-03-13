@@ -1,5 +1,5 @@
 import { test } from '@playwright/test';
-import { RegisterAPI } from '../modules/registerAPI.js';
+import { AuthAPI } from '../modules/authAPI.js';
 import { INVALID_USER_CREDENTIALS, VALID_USER_CREDENTIALS } from '../fixtures/credentials.js';
 import { ERROR_MESSAGES } from '../fixtures/messages.js';
 
@@ -7,7 +7,7 @@ test.describe("Register API tests", () => {
     let registerAPI;
 
   test.beforeEach("Visit the login page", ({ page }) => {
-        registerAPI = new RegisterAPI(page);
+        registerAPI = new AuthAPI(page);
     });
 
   test("Attempt to register user with no credentials at all", async ({}) => {

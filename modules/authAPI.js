@@ -1,8 +1,10 @@
-import { test, expect } from '@playwright/test';
-import { VALID_USER_CREDENTIALS } from "../fixtures/credentials";
+import { expect } from '@playwright/test';
+import { VALID_USER_CREDENTIALS, generateUserCredentials } from "../fixtures/credentials";
 import { SUCCESS_MESSAGES } from '../fixtures/messages.js';
 
-export class LoginAPI {
+const { username1, email1, password1 } = generateUserCredentials(5);
+
+export class AuthAPI {
     constructor(page) {
       this.page = page;
     }
@@ -42,12 +44,15 @@ export class LoginAPI {
             type: expect.stringMatching("Bearer"), 
           }
         });
+        expect(responseJSON.message).toBe(message);
+        expect(responseJSON.status).toBe(status);
       }
 
       if(response.status() == 401) {
         expect(responseJSON).toEqual({
           error: expect.any(String), 
         });
+        expect(responseJSON.error).toBe(error);
       }
 
        if(response.status() == 422) {
@@ -55,22 +60,60 @@ export class LoginAPI {
           message: expect.any(String), 
           errors: expect.any(Object), 
          });
+         expect(responseJSON.message).toBe(message);
        }
-
-      if (responseJSON.message != null) {
-      expect(responseJSON.message).toBe(message);
-      }
-
-      if(responseJSON.status != null) {
-        expect(responseJSON.status).toBe(status);
-      }
-
-      if (responseJSON.error != null) {
-        expect(responseJSON.error).toBe(error);
-      }
 
       return responseJSON;
     }
+
+    async register({
+        username = username1, 
+        email = email1, 
+        password = password1, 
+        statusCode = 200, 
+        status = SUCCESS_MESSAGES["BASIC_SUCCESS_MESSAGE"], 
+        message = SUCCESS_MESSAGES["USER_CREATED_SUCCESSFULLY"], 
+      }) {
+        let response = await this.page.request.post('/api/v1/auth/register', {
+          data: { username: username, email: email, password: password },
+          headers: { Accept: 'application/json' },
+        });
+        
+        expect(response.status()).toBe(statusCode);
+    
+        let responseJSON = await response.json();
+  
+        if(response.status() == 200) {
+          expect(responseJSON).toEqual({
+            status: expect.any(String), 
+            message: expect.any(String), 
+            user: {
+              username: expect.any(String), 
+              email: expect.stringMatching(/^[^\s@]+@[^\s@]+\.[^\s@]+$/), 
+              password: expect.any(String), 
+              updated_at: expect.any(String), 
+              created_at: expect.any(String), 
+              id: expect.any(Number), 
+            }, 
+            auth: {
+              token: expect.stringMatching(/^[A-Za-z0-9-_]+\.[A-Za-z0-9-_]+\.[A-Za-z0-9-_.+/]*$/), 
+              type: expect.stringMatching("Bearer"),
+            }
+          });
+          expect(responseJSON.status).toBe(status);
+          expect(responseJSON.message).toBe(message);
+        }
+  
+        if(response.status() == 422) {
+          expect(responseJSON).toEqual({
+            message: expect.any(String), 
+            errors: expect.any(Object), 
+          });
+          expect(responseJSON.message).toBe(message);
+        }
+  
+        return responseJSON;
+      }
 
     async logout({
       token, 

@@ -1,13 +1,13 @@
 import { test } from '@playwright/test';
 import { INVALID_USER_CREDENTIALS } from '../fixtures/credentials.js';
-import { LoginAPI } from '../modules/loginAPI.js';
+import { AuthAPI } from '../modules/authAPI.js';
 import { ERROR_MESSAGES } from '../fixtures/messages.js';
 
 test.describe("Login API tests", () => {
     let loginAPI;
     
     test.beforeEach("Visit the login page", ({ page }) => {
-      loginAPI = new LoginAPI(page);
+      loginAPI = new AuthAPI(page);
   });
   
   test("Attempt to log in with no credentials of any kind", async ({}) => {

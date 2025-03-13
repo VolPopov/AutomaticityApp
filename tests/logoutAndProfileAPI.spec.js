@@ -1,5 +1,5 @@
 import { test } from '@playwright/test';
-import { LoginAPI } from '../modules/loginAPI.js';
+import { AuthAPI } from '../modules/authAPI.js';
 import { VALID_USER_CREDENTIALS } from '../fixtures/credentials.js';
 
 test.describe("Logout and profile checking tests", () => {
@@ -8,7 +8,7 @@ test.describe("Logout and profile checking tests", () => {
     let bearerToken;
 
     test.beforeEach("Log in with correfct credentials", async ({ page }) => {
-        loginAPI = new LoginAPI(page);
+        loginAPI = new AuthAPI(page);
         const response = await loginAPI.login({});
         bearerToken = await response.auth.token;
     });
