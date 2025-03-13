@@ -59,8 +59,6 @@ export class RegisterAPI {
       if(responseJSON.message != null) {
         expect(responseJSON.message).toBe(message);
       }
-      console.log(responseJSON);
-      
 
       return responseJSON;
     }

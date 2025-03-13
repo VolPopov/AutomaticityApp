@@ -1,6 +1,5 @@
-import { test, expect } from '@playwright/test';
+import { test } from '@playwright/test';
 import { LoginAPI } from '../modules/loginAPI.js';
-import { SUCCESS_MESSAGES } from '../fixtures/messages.js';
 import { VALID_USER_CREDENTIALS } from '../fixtures/credentials.js';
 
 test.describe("Logout and profile checking tests", () => {
@@ -15,10 +14,10 @@ test.describe("Logout and profile checking tests", () => {
     });
 
     test("Successful logout", async ({}) => {
-        await loginAPI.logout({token: bearerToken});
+        await loginAPI.logout({ token: bearerToken });
     });
 
     test("Succesful profile get", async ({}) => {
-        await loginAPI.profile({token: bearerToken, username: VALID_USER_CREDENTIALS["VALID_USERNAME"], email: VALID_USER_CREDENTIALS["VALID_EMAIL"]});
+        await loginAPI.profile({ token: bearerToken, username: VALID_USER_CREDENTIALS["VALID_USERNAME"], email: VALID_USER_CREDENTIALS["VALID_EMAIL"] });
     });
 });
