@@ -1,27 +1,24 @@
-import { test } from '@playwright/test';
-import { AuthAPI } from '../modules/authAPI.js';
+import { test } from '../fixtures/basePage.js';
 import { VALID_USER_CREDENTIALS } from '../fixtures/credentials.js';
 
 test.describe("Logout and profile checking tests", () => {
 
-    let loginAPI;
     let bearerToken;
 
-    test.beforeEach("Log in with correfct credentials", async ({ page }) => {
-        loginAPI = new AuthAPI(page);
-        const response = await loginAPI.login({});
+    test.beforeEach("Log in with correfct credentials", async ({ authAPI }) => {
+        const response = await authAPI.login({});
         bearerToken = await response.auth.token;
     });
 
-    test("Successful logout", async ({}) => {
-        await loginAPI.logout({ token: bearerToken });
+    test("Successful logout", { tag: "@smoke" }, async ({ authAPI }) => {
+        await authAPI.logout({ token: bearerToken });
     });
 
-    test("Succesful profile get", async ({}) => {
-        await loginAPI.profile({ token: bearerToken, username: VALID_USER_CREDENTIALS["VALID_USERNAME"], email: VALID_USER_CREDENTIALS["VALID_EMAIL"] });
+    test("Succesful profile get", { tag: "@smoke" }, async ({ authAPI }) => {
+        await authAPI.profile({ token: bearerToken, username: VALID_USER_CREDENTIALS["VALID_USERNAME"], email: VALID_USER_CREDENTIALS["VALID_EMAIL"] });
     });
 
-    test("Succesful refresh of token", async ({}) => {
-        await loginAPI.refresh({ token: bearerToken })
+    test("Succesful refresh of token", { tag: "@smoke" }, async ({ authAPI }) => {
+        await authAPI.refresh({ token: bearerToken })
     });
 });

@@ -191,8 +191,6 @@ export class AuthAPI {
           expires_in: expect.any(Number), 
         });
       }
-
-      console.log(responseJSON);
       return responseJSON;
     }
   }
