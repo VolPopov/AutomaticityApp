@@ -1,6 +1,6 @@
 import { expect } from '@playwright/test';
 import { VALID_USER_CREDENTIALS, generateUserCredentials } from "../fixtures/credentials";
-import { SUCCESS_MESSAGES } from '../fixtures/messages.js';
+import { ERROR_MESSAGES, SUCCESS_MESSAGES } from '../fixtures/messages.js';
 
 const { username1, email1, password1 } = generateUserCredentials(5);
 
@@ -132,10 +132,11 @@ export class AuthAPI {
          expect(responseJSON).toEqual({
           message: expect.any(String), 
          });
+         expect(responseJSON.message).toBe(message);
         }
 
-        if(responseJSON.message != null) {
-          expect(responseJSON.message).toBe(message);
+        if(response.status() == 500) {
+          expect(responseJSON.message).toBe(message)
         }
     }
 
@@ -152,6 +153,7 @@ export class AuthAPI {
       expect(response.status()).toBe(statusCode);
 
       let responseJSON = await response.json();
+      
       if(response.status() == 200) {
         expect(responseJSON).toEqual({
           id: expect.any(Number), 
@@ -162,15 +164,13 @@ export class AuthAPI {
           created_at: expect.any(String), 
           updated_at: expect.any(String), 
         });
-      }
-
-      if(responseJSON.username != null) {
         expect(responseJSON.username).toBe(username);
-      }
-
-      if(responseJSON.email != null) {
         expect(responseJSON.email).toBe(email);
       }
+
+       if(response.status() == 500) {
+         expect(responseJSON.message).toBe(ERROR_MESSAGES["INVALID_TOKEN"]);
+       }
     }
 
     async refresh({
@@ -194,4 +194,3 @@ export class AuthAPI {
       return responseJSON;
     }
   }
-  

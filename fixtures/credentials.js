@@ -30,8 +30,7 @@ const INVALID_USER_CREDENTIALS = {
     INVALID_MAIL_FORMAT: "mailWithNoAtSymbol.com", 
     VALID_MAIL_BUT_NOT_REGISTERED: "thisMailIsNotRegistered@gmail.com", 
     SHORT_PASSWORD: "Pas", 
-    
-    
+    INVALID_TOKEN: "ThisIsAnInvalidTokenFormat", 
 };
 
 export {VALID_USER_CREDENTIALS, INVALID_USER_CREDENTIALS, generateUserCredentials}

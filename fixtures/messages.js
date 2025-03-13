@@ -18,6 +18,8 @@ const ERROR_MESSAGES = {
     TAKEN_USERNAME: "The username has already been taken.",
     TAKEN_EMAIL: "The email has already been taken.", 
     USER_ALREADY_EXISTS: "The username has already been taken. (and 1 more error)", 
+    INVALID_TOKEN: "Token could not be parsed from the request.", 
+    EXPIRED_TOKEN: "Token has expired", 
 };
 
 export{SUCCESS_MESSAGES, ERROR_MESSAGES};
