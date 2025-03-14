@@ -176,13 +176,14 @@ export class AuthAPI {
     async refresh({
       statusCode = 200, 
       token, 
+      message, 
     }) {
       let response = await this.page.request.post("api/v1/auth/refresh", {
         headers: { Accept: "application/json", Authorization: `Bearer ${token}`}
       });
 
       expect(response.status()).toBe(statusCode);
-      let responseJSON = await response.json();
+      let responseJSON = await response.json();      
       
       if(response.status() == 200) {
         expect(responseJSON).toEqual({
@@ -191,6 +192,74 @@ export class AuthAPI {
           expires_in: expect.any(Number), 
         });
       }
+
+      if(response.status() == 500) {
+        expect(responseJSON.message).toBe(message);
+      }
+      return responseJSON;
+    }
+
+    async delete({
+      userID, 
+      statusCode = 200, 
+      token, 
+    }) {
+      let response = await this.page.request.delete(`api/v1/customers/${userID}`, {
+        headers: { Accept: 'application/json', Authorization: `Bearer ${token}` },
+      });
+
+      expect(response.status()).toBe(statusCode);
+      let responseJSON = await response.json();
+      if(response.status == 200) {
+        expect(responseJSON).toEqual({
+          status: expect.any(String), 
+          message: expect.any(String), 
+          customer: {
+            id: expect.any(Number), 
+            user_id: expect.any(Number), 
+            cart_id: null, 
+            username: expect.any(String), 
+            first_name: null, 
+            last_name: null, 
+            email: expect.stringMatching(/^[^\s@]+@[^\s@]+\.[^\s@]+$/), 
+            password: expect.any(String), 
+            date_of_birth: null, 
+            created_at: expect.any(String), 
+            updated_at: expect.any(String), 
+            billing_info: null, 
+            shipping_info: null, 
+          }
+        });
+        expect(responseJSON.customer.userID).toBe(userID);
+      }
+
+      return responseJSON;     
+    }
+
+    async getCustomers({
+      token, 
+      statusCode = 200, 
+    }) {
+      let response = await this.page.request.get("api/v1/customers", {
+        headers: { Accept: 'application/json', Authorization: `Bearer ${token}` }, 
+      });
+
+      expect(response.status()).toBe(statusCode);
+      let responseJSON = await response.json();   
+      return responseJSON;
+    }
+
+    async getSpecificCustomer({
+      token, 
+      userID, 
+      statusCode = 200, 
+    }) {
+      let response = await this.page.request.get(`api/v1/customers/${userID}`, {
+        headers: { Accept: 'application/json', Authorization: `Bearer ${token}` }, 
+      });
+
+      expect(response.status()).toBe(statusCode);
+      let responseJSON = await response.json();
       return responseJSON;
     }
   }

@@ -20,9 +20,9 @@ const generateRandomString = length => {
   };
 
 const VALID_USER_CREDENTIALS = {
-    VALID_USERNAME: "filip", 
-    VALID_EMAIL: "filip@test.com", 
-    VALID_PASSWORD: "test123",
+    VALID_USERNAME: "Vol", 
+    VALID_EMAIL: "VolPopov@gmail.com", 
+    VALID_PASSWORD: "pass123",
 };
 
 const INVALID_USER_CREDENTIALS = {
@@ -30,6 +30,7 @@ const INVALID_USER_CREDENTIALS = {
     INVALID_MAIL_FORMAT: "mailWithNoAtSymbol.com", 
     VALID_MAIL_BUT_NOT_REGISTERED: "thisMailIsNotRegistered@gmail.com", 
     SHORT_PASSWORD: "Pas", 
+    LONG_PASSWORD: generateRandomString(1000), 
     INVALID_TOKEN: "ThisIsAnInvalidTokenFormat", 
 };
 
