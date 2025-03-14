@@ -43,6 +43,10 @@ test.describe("Register API tests", () => {
   test("Attempt to register user with an already registered mail", { tag: "@regression" }, async ({ authAPI }) => {
     await authAPI.register({ email: VALID_USER_CREDENTIALS["VALID_EMAIL"], statusCode: 422, message: ERROR_MESSAGES["TAKEN_EMAIL"] });
   });
+
+  test("Attempt to register with an invalid method (Patch)", { tag: "@regression" }, async ({ authAPI }) => {
+    await authAPI.invalidMethodRegister({});
+  });
   
   test('Succesful register of new user', { tag: "@smoke" }, async ({ authAPI }) => {
     await authAPI.register({});

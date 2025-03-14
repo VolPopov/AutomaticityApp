@@ -276,4 +276,52 @@ export class AuthAPI {
       let responseJSON = await response.json();
       return responseJSON;
     }
+
+    async invalidMethodLogin({
+      email = VALID_USER_CREDENTIALS["VALID_EMAIL"], 
+      password = VALID_USER_CREDENTIALS["VALID_PASSWORD"], 
+      statusCode = 405,  
+      error = ERROR_MESSAGES["METHOD_NOT_ALLOWED"], 
+    }) {
+      let response = await this.page.request.put('/api/v1/auth/login', {
+        data: { email: email, password: password,},
+        headers: { Accept: 'application/json' }, 
+      });
+      
+      expect(response.status()).toBe(statusCode);
+
+      let responseJSON = await response.json();
+
+      if(response.status() == 405) {
+        expect(responseJSON).toEqual({
+          error: expect.any(String), 
+        });
+      expect(responseJSON.error).toBe(error);
+      }
   }
+
+  async invalidMethodRegister({
+    username = username1, 
+    email = email1, 
+    password = password1, 
+    statusCode = 405,  
+    error = ERROR_MESSAGES["METHOD_NOT_ALLOWED"], 
+  }) {
+    let response = await this.page.request.patch('/api/v1/auth/register', {
+      data: { username: username, email: email, password: password,},
+      headers: { Accept: 'application/json' }, 
+    });
+    
+    expect(response.status()).toBe(statusCode);
+
+    let responseJSON = await response.json();
+    
+    if(response.status() == 405) {
+      expect(responseJSON).toEqual({
+        error: expect.any(String), 
+      });
+
+    expect(responseJSON.error).toBe(error);
+    }
+  }
+}
