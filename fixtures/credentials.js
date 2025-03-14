@@ -28,10 +28,10 @@ const VALID_USER_CREDENTIALS = {
 const INVALID_USER_CREDENTIALS = {
     INCORRECT_PASSWORD_FOR_VALID_USER: "wrong1212", 
     INVALID_MAIL_FORMAT: "mailWithNoAtSymbol.com", 
-    VALID_MAIL_BUT_NOT_REGISTERED: "thisMailIsNotRegistered@gmail.com", 
-    SHORT_PASSWORD: "Pas", 
+    VALID_MAIL_BUT_NOT_REGISTERED: `${generateRandomString(10)}@gmail.com`, 
+    SHORT_PASSWORD: generateRandomString(3), 
     LONG_PASSWORD: generateRandomString(1000), 
-    INVALID_TOKEN: "ThisIsAnInvalidTokenFormat", 
+    INVALID_TOKEN: generateRandomString(10), 
 };
 
-export {VALID_USER_CREDENTIALS, INVALID_USER_CREDENTIALS, generateUserCredentials}
+export { VALID_USER_CREDENTIALS, INVALID_USER_CREDENTIALS, generateUserCredentials }

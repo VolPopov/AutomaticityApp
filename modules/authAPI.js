@@ -7,6 +7,15 @@ const { username1, email1, password1 } = generateUserCredentials(5);
 export class AuthAPI {
     constructor(page) {
       this.page = page;
+      this.endpoint = "/api/v1/auth";
+    }
+
+    getAcceptHeader() {
+      return "application/json";
+    }
+
+    getAuthorizationHeader() {
+      return `Bearer ${token}`;
     }
   
     async login({
@@ -17,9 +26,9 @@ export class AuthAPI {
       status = SUCCESS_MESSAGES["BASIC_SUCCESS_MESSAGE"], 
       error, 
     }) {
-      let response = await this.page.request.post('/api/v1/auth/login', {
+      let response = await this.page.request.post(`${this.endpoint}/login`, {
         data: { email: email, password: password,},
-        headers: { Accept: 'application/json' }, 
+        headers: { Accept: this.getAcceptHeader() }, 
       });
       
       expect(response.status()).toBe(statusCode);
@@ -48,28 +57,32 @@ export class AuthAPI {
         expect(responseJSON.status).toBe(status);
       }
 
-      if(response.status() == 401) {
-        expect(responseJSON).toEqual({
-          error: expect.any(String), 
-        });
-        expect(responseJSON.error).toBe(error);
-      }
+      if(response.status() != 200) {
+        switch(response.status()) {
 
-      if(response.status() == 405) {
-        expect(responseJSON).toEqual({
-          error: expect.any(String), 
-        });
-        expect(responseJSON.error).toBe(error);
-      }
+          case 401: 
+          expect(responseJSON).toEqual({
+            error: expect.any(String), 
+          });
+          expect(responseJSON.error).toBe(error);
+          break;
 
-       if(response.status() == 422) {
-         expect(responseJSON).toEqual({
+          case 405:
+          expect(responseJSON).toEqual({
+          error: expect.any(String), 
+          });
+          expect(responseJSON.error).toBe(error);  
+          break;
+
+          case 422: 
+          expect(responseJSON).toEqual({
           message: expect.any(String), 
           errors: expect.any(Object), 
-         });
-         expect(responseJSON.message).toBe(message);
-       }
-
+          });
+          expect(responseJSON.message).toBe(message);
+          break;
+        }
+      }
       return responseJSON;
     }
 
@@ -81,9 +94,9 @@ export class AuthAPI {
         status = SUCCESS_MESSAGES["BASIC_SUCCESS_MESSAGE"], 
         message = SUCCESS_MESSAGES["USER_CREATED_SUCCESSFULLY"], 
       }) {
-        let response = await this.page.request.post('/api/v1/auth/register', {
+        let response = await this.page.request.post(`${this.endpoint}/register`, {
           data: { username: username, email: email, password: password },
-          headers: { Accept: 'application/json' },
+          headers: { Accept: this.getAcceptHeader() },
         });
         
         expect(response.status()).toBe(statusCode);
@@ -111,21 +124,24 @@ export class AuthAPI {
           expect(responseJSON.message).toBe(message);
         }
 
-        if(response.status() == 405) {
-          expect(responseJSON).toEqual({
+        if(response.status() != 200) {
+          switch(response.status()) {
+            case 405: 
+            expect(responseJSON).toEqual({
             error: expect.any(String), 
-          });
-          expect(responseJSON.error).toBe(error);
-        }
-  
-        if(response.status() == 422) {
-          expect(responseJSON).toEqual({
+            });
+            expect(responseJSON.error).toBe(error);
+            break;
+
+            case 422: 
+            expect(responseJSON).toEqual({
             message: expect.any(String), 
             errors: expect.any(Object), 
-          });
-          expect(responseJSON.message).toBe(message);
+            });
+            expect(responseJSON.message).toBe(message);
+            break;
+          }
         }
-  
         return responseJSON;
       }
 
@@ -134,8 +150,8 @@ export class AuthAPI {
       statusCode = 200,
       message = SUCCESS_MESSAGES["USER_LOGGED_OUT"],
     }) {
-      let response = await this.page.request.post('/api/v1/auth/logout', {
-        headers: { Accept: 'application/json', Authorization: `Bearer ${token}`}, 
+      let response = await this.page.request.post(`${this.endpoint}/logout`, {
+        headers: { Accept: this.getAcceptHeader(), Authorization: this.getAuthorizationHeader() }, 
       });
 
       expect(response.status()).toBe(statusCode);
@@ -160,8 +176,8 @@ export class AuthAPI {
       username, 
       email, 
     }) {
-      let response = await this.page.request.post("/api/v1/auth/profile", {
-        headers: { Accept: 'application/json', Authorization: `Bearer ${token}` }, 
+      let response = await this.page.request.post(`${this.endpoint}/profile`, {
+        headers: { Accept: this.getAcceptHeader(), Authorization: this.getAuthorizationHeader() }, 
       });
 
       expect(response.status()).toBe(statusCode);
@@ -192,8 +208,8 @@ export class AuthAPI {
       token, 
       message, 
     }) {
-      let response = await this.page.request.post("api/v1/auth/refresh", {
-        headers: { Accept: "application/json", Authorization: `Bearer ${token}`}
+      let response = await this.page.request.post(`${this.endpoint}/refresh`, {
+        headers: { Accept: this.getAcceptHeader(), Authorization: this.getAuthorizationHeader() }, 
       });
 
       expect(response.status()).toBe(statusCode);
@@ -219,7 +235,7 @@ export class AuthAPI {
       token, 
     }) {
       let response = await this.page.request.delete(`api/v1/customers/${userID}`, {
-        headers: { Accept: 'application/json', Authorization: `Bearer ${token}` },
+        headers: { Accept: this.getAcceptHeader(), Authorization: this.getAuthorizationHeader() },
       });
 
       expect(response.status()).toBe(statusCode);
@@ -255,7 +271,7 @@ export class AuthAPI {
       statusCode = 200, 
     }) {
       let response = await this.page.request.get("api/v1/customers", {
-        headers: { Accept: 'application/json', Authorization: `Bearer ${token}` }, 
+        headers: { Accept: this.getAcceptHeader(), Authorization: this.getAuthorizationHeader() }, 
       });
 
       expect(response.status()).toBe(statusCode);
@@ -269,7 +285,7 @@ export class AuthAPI {
       statusCode = 200, 
     }) {
       let response = await this.page.request.get(`api/v1/customers/${userID}`, {
-        headers: { Accept: 'application/json', Authorization: `Bearer ${token}` }, 
+        headers: { Accept: this.getAcceptHeader(), Authorization: this.getAuthorizationHeader() }, 
       });
 
       expect(response.status()).toBe(statusCode);
@@ -283,9 +299,9 @@ export class AuthAPI {
       statusCode = 405,  
       error = ERROR_MESSAGES["METHOD_NOT_ALLOWED"], 
     }) {
-      let response = await this.page.request.put('/api/v1/auth/login', {
+      let response = await this.page.request.put(`${this.endpoint}/login`, {
         data: { email: email, password: password,},
-        headers: { Accept: 'application/json' }, 
+        headers: { Accept: this.getAcceptHeader() }, 
       });
       
       expect(response.status()).toBe(statusCode);
@@ -307,9 +323,9 @@ export class AuthAPI {
     statusCode = 405,  
     error = ERROR_MESSAGES["METHOD_NOT_ALLOWED"], 
   }) {
-    let response = await this.page.request.patch('/api/v1/auth/register', {
+    let response = await this.page.request.patch(`${this.endpoint}/register`, {
       data: { username: username, email: email, password: password,},
-      headers: { Accept: 'application/json' }, 
+      headers: { Accept: this.getAcceptHeader() }, 
     });
     
     expect(response.status()).toBe(statusCode);

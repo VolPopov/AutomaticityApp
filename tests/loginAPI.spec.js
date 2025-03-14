@@ -24,9 +24,9 @@ test.describe("Login API tests", () => {
     await authAPI.login({ email: INVALID_USER_CREDENTIALS["VALID_MAIL_BUT_NOT_REGISTERED"], statusCode: 401, error: ERROR_MESSAGES["UNAUTHORIZED"] });
   });
   
-  test("attempt to log in using an invalid method (put) ", { tag: "@regression" }, async ({ authAPI }) => {
+  test("Attempt to log in using an invalid method (Put)", { tag: "@regression" }, async ({ authAPI }) => {
     await authAPI.invalidMethodLogin({});
-  })
+  });
 
   test('Succesful login with valid credentials', { tag: "@smoke" }, async ({ authAPI }) => {
        await authAPI.login({});
