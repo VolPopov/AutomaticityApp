@@ -13,7 +13,7 @@ test.describe("Login API tests", () => {
   });
 
   test("Attempt to log in with a correct mail, but the wrong password", { tag: "@regression" }, async ({ authAPI }) => {
-    await authAPI.login({ password:INVALID_USER_CREDENTIALS["INCORRECT_PASSWORD_FOR_VALID_USER"], statusCode: 401, error: ERROR_MESSAGES["UNAUTHORIZED"] });
+    await authAPI.login({ password: INVALID_USER_CREDENTIALS["INCORRECT_PASSWORD_FOR_VALID_USER"], statusCode: 401, error: ERROR_MESSAGES["UNAUTHORIZED"] });
   });
 
   test("Attempt to log in with invalid mail format", { tag: "@regression" }, async ({ authAPI }) => {
@@ -24,8 +24,11 @@ test.describe("Login API tests", () => {
     await authAPI.login({ email: INVALID_USER_CREDENTIALS["VALID_MAIL_BUT_NOT_REGISTERED"], statusCode: 401, error: ERROR_MESSAGES["UNAUTHORIZED"] });
   });
   
-  test("Attempt to log in using an invalid method (Put)", { tag: "@regression" }, async ({ authAPI }) => {
-    await authAPI.invalidMethodLogin({});
+  test("Attempt to log in using invalid methods", { tag: "@regression" }, async ({ authAPI }) => {
+    await authAPI.invalidMethodLogin({ method: "get" });
+    await authAPI.invalidMethodLogin({ method: "put" });
+    await authAPI.invalidMethodLogin({ method: "patch" });
+    await authAPI.invalidMethodLogin({ method: "delete" });
   });
 
   test('Succesful login with valid credentials', { tag: "@smoke" }, async ({ authAPI }) => {

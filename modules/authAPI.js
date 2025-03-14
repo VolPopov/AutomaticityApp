@@ -14,7 +14,7 @@ export class AuthAPI {
       return "application/json";
     }
 
-    getAuthorizationHeader() {
+    getAuthorizationHeader(token) {
       return `Bearer ${token}`;
     }
   
@@ -142,6 +142,8 @@ export class AuthAPI {
             break;
           }
         }
+        console.log(responseJSON);
+        
         return responseJSON;
       }
 
@@ -151,7 +153,7 @@ export class AuthAPI {
       message = SUCCESS_MESSAGES["USER_LOGGED_OUT"],
     }) {
       let response = await this.page.request.post(`${this.endpoint}/logout`, {
-        headers: { Accept: this.getAcceptHeader(), Authorization: this.getAuthorizationHeader() }, 
+        headers: { Accept: this.getAcceptHeader(), Authorization: this.getAuthorizationHeader(token) }, 
       });
 
       expect(response.status()).toBe(statusCode);
@@ -177,7 +179,7 @@ export class AuthAPI {
       email, 
     }) {
       let response = await this.page.request.post(`${this.endpoint}/profile`, {
-        headers: { Accept: this.getAcceptHeader(), Authorization: this.getAuthorizationHeader() }, 
+        headers: { Accept: this.getAcceptHeader(), Authorization: this.getAuthorizationHeader(token) }, 
       });
 
       expect(response.status()).toBe(statusCode);
@@ -209,7 +211,7 @@ export class AuthAPI {
       message, 
     }) {
       let response = await this.page.request.post(`${this.endpoint}/refresh`, {
-        headers: { Accept: this.getAcceptHeader(), Authorization: this.getAuthorizationHeader() }, 
+        headers: { Accept: this.getAcceptHeader(), Authorization: this.getAuthorizationHeader(token) }, 
       });
 
       expect(response.status()).toBe(statusCode);
@@ -235,7 +237,7 @@ export class AuthAPI {
       token, 
     }) {
       let response = await this.page.request.delete(`api/v1/customers/${userID}`, {
-        headers: { Accept: this.getAcceptHeader(), Authorization: this.getAuthorizationHeader() },
+        headers: { Accept: this.getAcceptHeader(), Authorization: this.getAuthorizationHeader(token) },
       });
 
       expect(response.status()).toBe(statusCode);
@@ -271,7 +273,7 @@ export class AuthAPI {
       statusCode = 200, 
     }) {
       let response = await this.page.request.get("api/v1/customers", {
-        headers: { Accept: this.getAcceptHeader(), Authorization: this.getAuthorizationHeader() }, 
+        headers: { Accept: this.getAcceptHeader(), Authorization: this.getAuthorizationHeader(token) }, 
       });
 
       expect(response.status()).toBe(statusCode);
@@ -298,11 +300,40 @@ export class AuthAPI {
       password = VALID_USER_CREDENTIALS["VALID_PASSWORD"], 
       statusCode = 405,  
       error = ERROR_MESSAGES["METHOD_NOT_ALLOWED"], 
+      method,    
     }) {
-      let response = await this.page.request.put(`${this.endpoint}/login`, {
+      let response;
+
+      switch(method) {
+
+        case("get"): 
+        response = await this.page.request.get(`${this.endpoint}/login`, {
         data: { email: email, password: password,},
         headers: { Accept: this.getAcceptHeader() }, 
-      });
+        });
+        break;
+
+        case("put"): 
+        response = await this.page.request.put(`${this.endpoint}/login`, {
+        data: { email: email, password: password,},
+        headers: { Accept: this.getAcceptHeader() }, 
+        });
+        break;
+
+        case("patch"): 
+        response = await this.page.request.patch(`${this.endpoint}/login`, {
+        data: { email: email, password: password,},
+        headers: { Accept: this.getAcceptHeader() }, 
+        });
+        break;
+
+        case("delete"): 
+        response = await this.page.request.delete(`${this.endpoint}/login`, {
+        data: { email: email, password: password,},
+        headers: { Accept: this.getAcceptHeader() }, 
+        });
+        break;
+      }
       
       expect(response.status()).toBe(statusCode);
 
@@ -322,11 +353,42 @@ export class AuthAPI {
     password = password1, 
     statusCode = 405,  
     error = ERROR_MESSAGES["METHOD_NOT_ALLOWED"], 
+    method, 
   }) {
-    let response = await this.page.request.patch(`${this.endpoint}/register`, {
-      data: { username: username, email: email, password: password,},
+
+    let response;
+
+    switch(method) {
+
+      case("get"): 
+      response = await this.page.request.get(`${this.endpoint}/register`, {
+      data: { username: username, email: email, password: password },
       headers: { Accept: this.getAcceptHeader() }, 
-    });
+      });
+      break;
+
+      case("put"): 
+      response = await this.page.request.put(`${this.endpoint}/register`, {
+      data: { username: username, email: email, password: password },
+      headers: { Accept: this.getAcceptHeader() }, 
+      });
+      break;
+
+      case("patch"): 
+      response = await this.page.request.patch(`${this.endpoint}/register`, {
+      data: { username: username, email: email, password: password },
+      headers: { Accept: this.getAcceptHeader() }, 
+      });
+      break;
+
+      case("delete"): 
+      response = await this.page.request.delete(`${this.endpoint}/register`, {
+      data: { username: username, email: email, password: password },
+      headers: { Accept: this.getAcceptHeader() }, 
+      });
+      break;
+    }
+    
     
     expect(response.status()).toBe(statusCode);
 
