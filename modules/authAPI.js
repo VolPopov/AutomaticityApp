@@ -55,6 +55,13 @@ export class AuthAPI {
         expect(responseJSON.error).toBe(error);
       }
 
+      if(response.status() == 405) {
+        expect(responseJSON).toEqual({
+          error: expect.any(String), 
+        });
+        expect(responseJSON.error).toBe(error);
+      }
+
        if(response.status() == 422) {
          expect(responseJSON).toEqual({
           message: expect.any(String), 
@@ -102,6 +109,13 @@ export class AuthAPI {
           });
           expect(responseJSON.status).toBe(status);
           expect(responseJSON.message).toBe(message);
+        }
+
+        if(response.status() == 405) {
+          expect(responseJSON).toEqual({
+            error: expect.any(String), 
+          });
+          expect(responseJSON.error).toBe(error);
         }
   
         if(response.status() == 422) {

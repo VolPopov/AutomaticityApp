@@ -25,7 +25,7 @@ test.describe("Register API tests", () => {
   });
 
   test("Attempt to register user with a password of 1000 characters", { tag: "@regression" }, async ({ authAPI }) => {
-    await authAPI.register({ password: INVALID_USER_CREDENTIALS["LONG_PASSWORD"], statusCode: 422});
+    await authAPI.register({ password: INVALID_USER_CREDENTIALS["LONG_PASSWORD"], statusCode: 422 });
   });
 
   test("Attempt to register user with an invalid mail", { tag: "@regression" }, async ({ authAPI }) => {
