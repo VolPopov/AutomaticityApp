@@ -31,6 +31,8 @@ const INVALID_USER_CREDENTIALS = {
     VALID_MAIL_BUT_NOT_REGISTERED: `${generateRandomString(10)}@gmail.com`, 
     SHORT_PASSWORD: generateRandomString(3), 
     LONG_PASSWORD: generateRandomString(1000), 
+    LONG_EMAIL: `${generateRandomString(1000)}@gmail.com`, 
+    LONG_USERNAME: generateRandomString(1000), 
     INVALID_TOKEN: generateRandomString(10), 
     EXPIRED_TOKEN: "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vYXV0b21hdGljaXR5YWNhZGVteS5uZ3Jvay5hcHAvYXBpL3YxL2F1dGgvcmVnaXN0ZXIiLCJpYXQiOjE3NDE5NTU5NDIsImV4cCI6MTc0MTk1OTU0MiwibmJmIjoxNzQxOTU1OTQyLCJqdGkiOiI1NDR1WEJrS0lmbFYzNFNCIiwic3ViIjoiNTYiLCJwcnYiOiIyM2JkNWM4OTQ5ZjYwMGFkYjM5ZTcwMWM0MDA4NzJkYjdhNTk3NmY3In0.zKBRFVT6PwOwRI3mhOn0O-uyfU3Ts8BPwcbMLwDDbys", 
 };

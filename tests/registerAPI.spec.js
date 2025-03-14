@@ -24,8 +24,16 @@ test.describe("Register API tests", () => {
     await authAPI.register({ password: INVALID_USER_CREDENTIALS["SHORT_PASSWORD"], statusCode: 422, message: ERROR_MESSAGES["PASSWORD_TOO_SHORT"] });
   });
 
+  test("Attempt to register user with a username over 1000 characters", { tag: "@regression" }, async ({ authAPI }) => {
+    await authAPI.register({ username: INVALID_USER_CREDENTIALS["LONG_USERNAME"], statusCode:422, message: ERROR_MESSAGES["LONG_USERNAME"] });
+  });
+
   test("Attempt to register user with a password of 1000 characters", { tag: "@regression" }, async ({ authAPI }) => {
     await authAPI.register({ password: INVALID_USER_CREDENTIALS["LONG_PASSWORD"], statusCode: 422 });
+  });
+
+  test("Attempt to register a user with an email of over 1000 characters", { tag: "@regression" }, async ({ authAPI }) => {
+    await authAPI.register({ email: INVALID_USER_CREDENTIALS["LONG_EMAIL"], statusCode: 422 });
   });
 
   test("Attempt to register user with an invalid mail", { tag: "@regression" }, async ({ authAPI }) => {

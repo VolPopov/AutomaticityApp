@@ -15,8 +15,8 @@ test.describe("Logout and profile checking tests", () => {
         await authAPI.logout({ token: INVALID_USER_CREDENTIALS["INVALID_TOKEN"], statusCode: 500, message: ERROR_MESSAGES["INVALID_TOKEN"] });
     });
 
-    test("attempt to log out with expired token", { tag: "@regression" }, async ({ authAPI }) => {
-        await authAPI.logout({ token: INVALID_USER_CREDENTIALS["EXPIRED_TOKEN"], statusCode: 500, message: ERROR_MESSAGES["EXPIRED_TOKEN"]})
+    test("Attempt to log out with expired token", { tag: "@regression" }, async ({ authAPI }) => {
+        await authAPI.logout({ token: INVALID_USER_CREDENTIALS["EXPIRED_TOKEN"], statusCode: 500, message: ERROR_MESSAGES["EXPIRED_TOKEN"] })
     })
 
     test("Attempt to get profile of user with invalid token", { tag: "@regression" }, async ({ authAPI }) => {

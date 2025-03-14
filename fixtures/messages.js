@@ -21,6 +21,7 @@ const ERROR_MESSAGES = {
     INVALID_TOKEN: "Token could not be parsed from the request.", 
     EXPIRED_TOKEN: "Token has expired", 
     METHOD_NOT_ALLOWED: "Method Not Allowed", 
+    LONG_USERNAME: "The username field must not be greater than 255 characters.", 
 };
 
 export{ SUCCESS_MESSAGES, ERROR_MESSAGES };
