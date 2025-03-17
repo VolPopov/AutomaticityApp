@@ -4,6 +4,9 @@ import { ERROR_MESSAGES } from '../fixtures/messages.js';
 
 test.describe("Register API tests", () => {
 
+  let userID;
+  let bearerToken;
+
   test("Attempt to register user with no credentials at all", { tag: "@regression" }, async ({ authAPI }) => {
     await authAPI.register({ username: "", email: "", password: "", statusCode: 422, message: ERROR_MESSAGES["USERNAME_EMAIL_AND_PASSWORD_ALL_MISSING"] });
   });
@@ -25,7 +28,7 @@ test.describe("Register API tests", () => {
   });
 
   test("Attempt to register user with a username over 1000 characters", { tag: "@regression" }, async ({ authAPI }) => {
-    await authAPI.register({ username: INVALID_USER_CREDENTIALS["LONG_USERNAME"], statusCode:422, message: ERROR_MESSAGES["LONG_USERNAME"] });
+    await authAPI.register({ username: INVALID_USER_CREDENTIALS["LONG_USERNAME"], statusCode: 422, message: ERROR_MESSAGES["LONG_USERNAME"] });
   });
 
   test("Attempt to register user with a password of 1000 characters", { tag: "@regression" }, async ({ authAPI }) => {
@@ -59,7 +62,10 @@ test.describe("Register API tests", () => {
     await authAPI.invalidMethodRegister({ method: "delete" });
   });
 
-  test('Succesful register of new user', { tag: "@smoke" }, async ({ authAPI }) => {
-    await authAPI.register({});
+  test('Succesful register of new user', { tag: "@smoke" }, async ({ authAPI, customersAPI }) => {
+    const response = await authAPI.register({});
+    userID = response.user.id;
+    bearerToken = response.auth.token;
+    await customersAPI.delete({ userID: userID, token: bearerToken });
     });
 });

@@ -27,14 +27,10 @@ test.describe("Logout and profile checking tests", () => {
         await authAPI.refresh({ token: INVALID_USER_CREDENTIALS["INVALID_TOKEN"], statusCode: 500, message: ERROR_MESSAGES["INVALID_TOKEN"] });
     });
 
-    test("Attempt to fetch profile of recently deleted user", { tag: "@regression" }, async ({ authAPI }) => {
-        const response2 = await authAPI.register({});
-        let userID = response2.user.id;
-        let username = response2.user.username;
-        let email = response2.user.email;
-        let bearerToken2 = response2.auth.token;
-        await authAPI.delete({ userID: userID, token: bearerToken2 });
-        await authAPI.profile({ token: bearerToken2, username: username, email: email, statusCode: 422 });
+    test("Attempt to fetch profile of recently deleted user", { tag: "@regression" }, async ({ authAPI, customersAPI }) => {
+        const response = await authAPI.register({});
+        await customersAPI.delete({ userID: response.user.id, token: response.auth.token });
+        await authAPI.profile({ token: response.auth.token, username: response.user.username, email: response.user.email, statusCode: 422 });
     });
 
     test("Successful logout", { tag: "@smoke" }, async ({ authAPI }) => {
