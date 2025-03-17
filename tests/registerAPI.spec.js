@@ -14,10 +14,10 @@ test.describe("Register API tests", () => {
   });
 
   test.afterAll("Delete new users", async ({}) => {
-    const customerAPI = new CustomersAPI(page);
-    if (userID != null && bearerToken != null) {
-    await customerAPI.delete({ userID: userID, token: bearerToken });
-    }
+     const customerAPI = new CustomersAPI(page);
+     if (userID != null && bearerToken != null) {
+     await customerAPI.delete({ userID: userID, token: bearerToken });
+     }
     await page.close();
   })
 
