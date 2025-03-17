@@ -47,10 +47,7 @@ async delete({
       });
       expect(responseJSON.customer.userID).toBe(userID);
     }
-
-    console.log(responseJSON);
     
-
     return responseJSON;     
   }
 

@@ -76,7 +76,7 @@ test.describe("Register API tests", () => {
     await authAPI.invalidMethodRegister({ method: "delete" });
   });
 
-  test('Succesful register of new user', { tag: "@smoke" }, async ({ authAPI }) => {
+  test("Succesful register of new user", { tag: "@smoke" }, async ({ authAPI }) => {
     const response = await authAPI.register({});
     userID = response.user.id;
     bearerToken = response.auth.token;
