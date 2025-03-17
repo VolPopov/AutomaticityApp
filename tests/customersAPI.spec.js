@@ -4,8 +4,12 @@ import { ERROR_MESSAGES, noID } from '../fixtures/messages.js';
 
 test.describe("Customer API tests", () => {
 
-    test("Attempt to list all users without a token", { tag: "@regression" }, async ({ customersAPI }) => {
+    test("Attempt to list all customers without a token", { tag: "@regression" }, async ({ customersAPI }) => {
         await customersAPI.getCustomers({ token: "", statusCode: 401, message: ERROR_MESSAGES["UNAUTHENTICATED"] })
+    });
+
+    test("Attempt to list all customers with an expired token", { tag: "@regression" }, async ({ customersAPI }) => {
+        await customersAPI.getCustomers({ token: INVALID_USER_CREDENTIALS["EXPIRED_TOKEN"], statusCode: 401, message: ERROR_MESSAGES["UNAUTHENTICATED"] });
     });
 
     test("Attempt to list all customers using unvalid methods", { tag: "@regression" }, async ({ authAPI, customersAPI }) => {
@@ -20,7 +24,11 @@ test.describe("Customer API tests", () => {
         await customersAPI.getSpecificCustomer({ token: "", statusCode: 401, message: ERROR_MESSAGES["UNAUTHENTICATED"] });
     });
 
-    test("Attempt to get customer with no valid ID", { tag: "@regression" }, async({ authAPI, customersAPI }) => {
+    test("Attempt to get a single customer with an expired token", { tag: "@regression" }, async ({ customersAPI }) => {
+        await customersAPI.getSpecificCustomer({ token: INVALID_USER_CREDENTIALS["EXPIRED_TOKEN"], statusCode: 401, message: ERROR_MESSAGES["UNAUTHENTICATED"] });
+    });
+
+    test("Attempt to get a customer with no valid ID", { tag: "@regression" }, async({ authAPI, customersAPI }) => {
         const response = await authAPI.login({});
         await customersAPI.getSpecificCustomer({ token: response.auth.token, userID: INVALID_ID, statusCode: 404, message: noID(INVALID_ID) });
     });
@@ -38,6 +46,11 @@ test.describe("Customer API tests", () => {
     test("Attempt to update customer email to already existing email", { tag: "@regression" }, async ({ authAPI,customersAPI }) => {
         const response = await authAPI.login({});
         await customersAPI.updateCustomer({ token: response.auth.token, email: VALID_USER_CREDENTIALS["VALID_EMAIL"], statusCode: 422 });
+    });
+
+    test("Attempt to delete customer with no valid ID", { tag: "@regression" }, async ({ authAPI, customersAPI }) => {
+        const response = await authAPI.login({});
+        await customersAPI.delete({ userID: INVALID_ID, token: response.auth.token, statusCode: 404, message: noID(INVALID_ID) })
     });
 
     test("List all customers in database", { tag: "@smoke" }, async ({ authAPI, customersAPI }) => {

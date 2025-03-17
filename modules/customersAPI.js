@@ -1,5 +1,5 @@
 import { expect } from '@playwright/test';
-import { ERROR_MESSAGES, SUCCESS_MESSAGES } from '../fixtures/messages.js';
+import { ERROR_MESSAGES, noID, SUCCESS_MESSAGES } from '../fixtures/messages.js';
 import { CUSTOMER_FOR_UPDATES, generateUserCredentials } from '../fixtures/credentials.js';
 
 const { username1, email1 } = generateUserCredentials(5);
@@ -262,6 +262,7 @@ export class CustomersAPI {
     userID, 
     statusCode = 200, 
     token, 
+    message = SUCCESS_MESSAGES["CUSTOMER_DELETED"], 
   }) {
     let response = await this.page.request.delete(`${this.endpoint}/${userID}`, {
       headers: { Accept: this.getAcceptHeader(), Authorization: this.getAuthorizationHeader(token) },
@@ -269,7 +270,7 @@ export class CustomersAPI {
 
     expect(response.status()).toBe(statusCode);
     let responseJSON = await response.json();
-    if(response.status == 200) {
+    if(response.status() == 200) {
       expect(responseJSON).toEqual({
         status: expect.any(String), 
         message: expect.any(String), 
@@ -289,8 +290,39 @@ export class CustomersAPI {
           shipping_info: null, 
         }
       });
-      expect(responseJSON.customer.userID).toBe(userID);
+      expect(responseJSON.customer.id).toBe(userID);
+      expect(responseJSON.message).toBe(message);
     }
+
+    if(response.status() != 200) {
+      switch(response.status()) {
+
+        case 401:
+         expect(responseJSON).toEqual({
+         message: expect.any(String), 
+         });
+         expect(responseJSON.message).toBe(message);
+         break;
+
+         case 404:
+         expect(responseJSON).toEqual({
+           error: expect.any(String), 
+         });
+         expect(responseJSON.error).toBe(message);
+         break;
+
+         case 405:
+         expect(responseJSON).toEqual({
+           message: expect.any(String), 
+         });
+         expect(responseJSON.message).toBe(message);
+
+         case 500: 
+         expect(responseJSON.message).toBe(message)
+         break;
+      }
+    }
+    
     console.log(responseJSON);
     
     return responseJSON;     
