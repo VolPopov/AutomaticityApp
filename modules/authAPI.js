@@ -142,6 +142,8 @@ export class AuthAPI {
             break;
           }
         }
+        console.log(responseJSON);
+        
         
         return responseJSON;
       }

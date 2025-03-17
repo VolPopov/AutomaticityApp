@@ -1,11 +1,25 @@
 import { test } from '../fixtures/basePage.js';
 import { INVALID_USER_CREDENTIALS, VALID_USER_CREDENTIALS } from '../fixtures/credentials.js';
 import { ERROR_MESSAGES } from '../fixtures/messages.js';
+import { CustomersAPI } from '../modules/customersAPI.js';
 
 test.describe("Register API tests", () => {
 
   let userID;
   let bearerToken;
+  let page;
+
+  test.beforeAll("Make page", async({ browser }) => {
+    page = await browser.newPage();
+  });
+
+  test.afterAll("Delete new users", async ({}) => {
+    const customerAPI = new CustomersAPI(page);
+    if (userID != null && bearerToken != null) {
+    await customerAPI.delete({ userID: userID, token: bearerToken });
+    }
+    await page.close();
+  })
 
   test("Attempt to register user with no credentials at all", { tag: "@regression" }, async ({ authAPI }) => {
     await authAPI.register({ username: "", email: "", password: "", statusCode: 422, message: ERROR_MESSAGES["USERNAME_EMAIL_AND_PASSWORD_ALL_MISSING"] });
@@ -62,10 +76,9 @@ test.describe("Register API tests", () => {
     await authAPI.invalidMethodRegister({ method: "delete" });
   });
 
-  test('Succesful register of new user', { tag: "@smoke" }, async ({ authAPI, customersAPI }) => {
+  test('Succesful register of new user', { tag: "@smoke" }, async ({ authAPI }) => {
     const response = await authAPI.register({});
     userID = response.user.id;
     bearerToken = response.auth.token;
-    await customersAPI.delete({ userID: userID, token: bearerToken });
     });
 });
