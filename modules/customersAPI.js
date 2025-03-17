@@ -1,6 +1,6 @@
 import { expect } from '@playwright/test';
 import { ERROR_MESSAGES, noID, SUCCESS_MESSAGES } from '../fixtures/messages.js';
-import { CUSTOMER_FOR_UPDATES, generateUserCredentials } from '../fixtures/credentials.js';
+import { CUSTOMER_FOR_UPDATES, generateUserCredentials, VALID_USER_CREDENTIALS } from '../fixtures/credentials.js';
 
 const { username1, email1 } = generateUserCredentials(5);
 
@@ -164,7 +164,7 @@ export class CustomersAPI {
         error: expect.any(String), 
         });
         expect(responseJSON.error).toBe(message);
-        break;  
+        break;
 
         case 405:
         expect(responseJSON).toEqual({
@@ -194,9 +194,10 @@ export class CustomersAPI {
     message = SUCCESS_MESSAGES["BASIC_SUCCESS_MESSAGE"], 
     username = username1, 
     email = email1, 
+    password = VALID_USER_CREDENTIALS["VALID_PASSWORD"], 
   }) {
     let response = await this.page.request.put(`${this.endpoint}/${userID}`, {
-    data: { username: username, email: email }, 
+    data: { username: username, email: email, password: password }, 
     headers: { Accept: this.getAcceptHeader(), Authorization: this.getAuthorizationHeader(token) }, 
     });
 
@@ -205,7 +206,6 @@ export class CustomersAPI {
     
 
     expect(response.status()).toBe(statusCode);
-    //let responseJSON = await response.json();
     if (statusCode == 200) {
       expect(responseJSON).toEqual({
         status: expect.any(String), 
@@ -227,11 +227,9 @@ export class CustomersAPI {
 
           case 404:
           expect(responseJSON).toEqual({
-            status: expect.any(String), 
-            message: expect.any(String), 
+            error: expect.any(String), 
           });
-          expect(responseJSON.status).toBe("error");
-          expect(responseJSON.message).toBe(message);
+          expect(responseJSON.error).toBe(message);
           break;
 
           case 405:
@@ -254,8 +252,7 @@ export class CustomersAPI {
        }
      }
 
-    console.log(responseJSON);
-    return responseJSON
+    return responseJSON;
   }
 
   async delete({
