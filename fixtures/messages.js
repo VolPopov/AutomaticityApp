@@ -23,6 +23,7 @@ const ERROR_MESSAGES = {
     EXPIRED_TOKEN: "Token has expired", 
     METHOD_NOT_ALLOWED: "Method Not Allowed", 
     LONG_USERNAME: "The username field must not be greater than 255 characters.", 
+    USERNAME_IS_NULL: "The username field must be a string."
 };
 
 function noID (id) {

@@ -192,14 +192,20 @@ export class CustomersAPI {
     userID = CUSTOMER_FOR_UPDATES["ID"], 
     statusCode = 200, 
     message = SUCCESS_MESSAGES["BASIC_SUCCESS_MESSAGE"], 
+    username = username1, 
+    email = email1, 
   }) {
     let response = await this.page.request.put(`${this.endpoint}/${userID}`, {
-    data: { username: username1, email: email1 }, 
+    data: { username: username, email: email }, 
     headers: { Accept: this.getAcceptHeader(), Authorization: this.getAuthorizationHeader(token) }, 
     });
 
-    expect(response.status()).toBe(statusCode);
     let responseJSON = await response.json();
+    console.log(responseJSON);
+    
+
+    expect(response.status()).toBe(statusCode);
+    //let responseJSON = await response.json();
     if (statusCode == 200) {
       expect(responseJSON).toEqual({
         status: expect.any(String), 
@@ -239,7 +245,7 @@ export class CustomersAPI {
             message: expect.any(String), 
             errors: expect.any(Object), 
           });
-          //expect.....
+          expect(responseJSON.message).toBe(message);
           break;
 
           case 500: 
