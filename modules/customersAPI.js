@@ -138,15 +138,27 @@ export class CustomersAPI {
       expect(Object.keys(responseJSON.customer).includes("user_id")).toBeTruthy();
       expect(responseJSON.customer.user_id).toEqual(expect.any(Number));
       expect(Object.keys(responseJSON.customer).includes("cart_id")).toBeTruthy();
+      if(responseJSON.customer.cart_id != null) {
+        expect(responseJSON.customer.cart_id).toEqual(expect.any(Number));
+      }
       expect(Object.keys(responseJSON.customer).includes("username")).toBeTruthy();
       expect(responseJSON.customer.username).toEqual(expect.any(String));
       expect(Object.keys(responseJSON.customer).includes("first_name")).toBeTruthy();
+      if(responseJSON.customer.first_name != null) {
+        expect(responseJSON.customer.first_name).toEqual(expect.any(String));
+      }
       expect(Object.keys(responseJSON.customer).includes("last_name")).toBeTruthy();
+      if(responseJSON.customer.last_name != null) {
+        expect(responseJSON.customer.last_name).toEqual(expect.any(String));
+      }
       expect(Object.keys(responseJSON.customer).includes("email")).toBeTruthy();
       expect(responseJSON.customer.email).toEqual(expect.stringMatching(/^[^\s@]+@[^\s@]+\.[^\s@]+$/));
       expect(Object.keys(responseJSON.customer).includes("password")).toBeTruthy();
       expect(responseJSON.customer.password).toEqual(expect.any(String));
       expect(Object.keys(responseJSON.customer).includes("date_of_birth")).toBeTruthy();
+      if(responseJSON.customer.date_of_birth != null) {
+        expect(responseJSON.customer.date_of_birth).toEqual(expect.any(String));
+      }
       expect(Object.keys(responseJSON.customer).includes("created_at")).toBeTruthy();
       expect(responseJSON.customer.created_at).toEqual(expect.any(String));
       expect(Object.keys(responseJSON.customer).includes("updated_at")).toBeTruthy();
@@ -286,21 +298,35 @@ export class CustomersAPI {
       expect(Object.keys(responseJSON.customer).includes("user_id")).toBeTruthy();
       expect(responseJSON.customer.user_id).toEqual(expect.any(Number));
       expect(Object.keys(responseJSON.customer).includes("cart_id")).toBeTruthy();
+      if(responseJSON.customer.cart_id != null) {
+        expect(responseJSON.customer.cart_id).toEqual(expect.any(Number));
+      }
       expect(Object.keys(responseJSON.customer).includes("username")).toBeTruthy();
       expect(responseJSON.customer.username).toEqual(expect.any(String));
       expect(Object.keys(responseJSON.customer).includes("first_name")).toBeTruthy();
+      if(responseJSON.customer.first_name != null) {
+        expect(responseJSON.customer.first_name).toEqual(expect.any(String));
+      }
       expect(Object.keys(responseJSON.customer).includes("last_name")).toBeTruthy();
+      if(responseJSON.customer.last_name != null) {
+        expect(responseJSON.customer.last_name).toEqual(expect.any(String));
+      }
       expect(Object.keys(responseJSON.customer).includes("email")).toBeTruthy();
       expect(responseJSON.customer.email).toEqual(expect.stringMatching(/^[^\s@]+@[^\s@]+\.[^\s@]+$/));
       expect(Object.keys(responseJSON.customer).includes("password")).toBeTruthy();
       expect(responseJSON.customer.password).toEqual(expect.any(String));
       expect(Object.keys(responseJSON.customer).includes("date_of_birth")).toBeTruthy();
+      if(responseJSON.customer.date_of_birth != null) {
+        expect(responseJSON.customer.date_of_birth).toEqual(expect.any(String));
+      }
       expect(Object.keys(responseJSON.customer).includes("created_at")).toBeTruthy();
       expect(responseJSON.customer.created_at).toEqual(expect.any(String));
       expect(Object.keys(responseJSON.customer).includes("updated_at")).toBeTruthy();
       expect(responseJSON.customer.updated_at).toEqual(expect.any(String));
       expect(Object.keys(responseJSON.customer).includes("billing_info")).toBeTruthy();
+      expect(responseJSON.customer.billing_info).toEqual(expect.any(Object));
       expect(Object.keys(responseJSON.customer).includes("shipping_info")).toBeTruthy();
+      expect(responseJSON.customer.shipping_info).toEqual(expect.any(Object));
 
       expect(responseJSON.customer.id).toBe(userID);
       expect(responseJSON.message).toBe(message);
@@ -498,7 +524,8 @@ export class CustomersAPI {
     token, 
     statusCode = 200, 
     userID = VALID_USER_CREDENTIALS["VALID_ID"], 
-    message, 
+    status = SUCCESS_MESSAGES["BASIC_SUCCESS_MESSAGE"], 
+    message = SUCCESS_MESSAGES["UPDATED_SHIPPING_INFO"], 
     error, 
     first_name = VALID_SHIPPING_INFO["FIRST_NAME"], 
     last_name = VALID_SHIPPING_INFO["LAST_NAME"], 
@@ -516,6 +543,25 @@ export class CustomersAPI {
     let responseJSON = await response.json();
     console.log(responseJSON);
     expect(response.status()).toBe(statusCode);
+
+    if(response.status() == 200) {
+      expect(responseJSON).toEqual({
+        status: expect.any(String), 
+        message: expect.any(String), 
+        shipping_info: expect.any(Object), 
+      });
+      expect(responseJSON.status).toBe(status);
+      expect(responseJSON.message).toBe(message);
+      expect(responseJSON.shipping_info.customer_id).toBe(userID);
+      expect(responseJSON.shipping_info.first_name).toBe(first_name);
+      expect(responseJSON.shipping_info.last_name).toBe(last_name);
+      expect(responseJSON.shipping_info.street_and_number).toBe(street_and_number);
+      expect(responseJSON.shipping_info.city).toBe(city);
+      expect(responseJSON.shipping_info.postal_code).toBe(postal_code);
+      expect(responseJSON.shipping_info.country).toBe(country);
+      expect(responseJSON.shipping_info.phone_number).toBe(phone_number);
+      expect(responseJSON.shipping_info.email).toBe(email);
+    }
     return responseJSON;
   }
 }

@@ -5,6 +5,7 @@ const SUCCESS_MESSAGES = {
     USER_LOGGED_OUT: "Successfully logged out", 
     CUSTOMER_DELETED: "Customer deleted successfully.", 
     UPDATED_BILLING_INFO: "Billinginfo updated successfully.", 
+    UPDATED_SHIPPING_INFO: "Shippinginfo updated successfully."
 };
 
 const ERROR_MESSAGES = {
