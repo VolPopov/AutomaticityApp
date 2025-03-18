@@ -9,6 +9,34 @@ const generateRandomString = length => {
     return result;
   };
 
+  const generateRandomInt = length => {
+    const characters =
+      '123456789';
+    let result = '';
+    for (let i = 0; i < length; i++) {
+      const randomIndex = Math.floor(Math.random() * characters.length);
+      result += characters[randomIndex];
+    }
+    return result;
+  };
+
+  const generateRandomStringNoNumbers = length => {
+    const characters =
+      'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
+    let result = '';
+    for (let i = 0; i < length; i++) {
+      const randomIndex = Math.floor(Math.random() * characters.length);
+      result += characters[randomIndex];
+    }
+    return result;
+  };
+  
+  function getCardType() {
+    let card = ["Visa", "Mastercard", "Discover", "American Express"];
+    const randomIndex = Math.floor(Math.random() * 4);
+    return card[randomIndex];
+  }
+  
   const generateUserCredentials = length => {
     const baseString = generateRandomString(length);
   
@@ -43,4 +71,12 @@ const INVALID_USER_CREDENTIALS = {
     EXPIRED_TOKEN: "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vYXV0b21hdGljaXR5YWNhZGVteS5uZ3Jvay5hcHAvYXBpL3YxL2F1dGgvcmVnaXN0ZXIiLCJpYXQiOjE3NDE5NTU5NDIsImV4cCI6MTc0MTk1OTU0MiwibmJmIjoxNzQxOTU1OTQyLCJqdGkiOiI1NDR1WEJrS0lmbFYzNFNCIiwic3ViIjoiNTYiLCJwcnYiOiIyM2JkNWM4OTQ5ZjYwMGFkYjM5ZTcwMWM0MDA4NzJkYjdhNTk3NmY3In0.zKBRFVT6PwOwRI3mhOn0O-uyfU3Ts8BPwcbMLwDDbys", 
 };
 
-export { VALID_USER_CREDENTIALS, INVALID_USER_CREDENTIALS, generateUserCredentials, CUSTOMER_FOR_UPDATES, INVALID_ID }
+const VALID_BILLING_INFO = {
+  CARDHOLDER: generateRandomStringNoNumbers(10), 
+  CARD_TYPE: getCardType(), 
+  CARD_NUMBER: generateRandomInt(16), 
+  CVV: generateRandomInt(3), 
+  EXPIRATION_DATE: "07/29", 
+}
+
+export { VALID_USER_CREDENTIALS, INVALID_USER_CREDENTIALS, generateUserCredentials, CUSTOMER_FOR_UPDATES, INVALID_ID, VALID_BILLING_INFO }

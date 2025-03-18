@@ -31,4 +31,8 @@ function noID (id) {
     return `No customer found with ID ${id} found`;
 }
 
-export{ SUCCESS_MESSAGES, ERROR_MESSAGES, noID };
+function billingInfoMessage(id) {
+    return `Billing information for customer ID ${id}`;
+}
+
+export{ SUCCESS_MESSAGES, ERROR_MESSAGES, noID, billingInfoMessage };

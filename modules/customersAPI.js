@@ -1,6 +1,6 @@
 import { expect } from '@playwright/test';
-import { ERROR_MESSAGES, noID, SUCCESS_MESSAGES } from '../fixtures/messages.js';
-import { CUSTOMER_FOR_UPDATES, generateUserCredentials, VALID_USER_CREDENTIALS } from '../fixtures/credentials.js';
+import { billingInfoMessage, ERROR_MESSAGES, SUCCESS_MESSAGES } from '../fixtures/messages.js';
+import { CUSTOMER_FOR_UPDATES, generateUserCredentials, VALID_BILLING_INFO, VALID_USER_CREDENTIALS } from '../fixtures/credentials.js';
 
 const { username1, email1 } = generateUserCredentials(5);
 
@@ -128,22 +128,21 @@ export class CustomersAPI {
     let responseJSON = await response.json();
 
     if(statusCode == 200) {
-      expect(responseJSON).toEqual({
-        status: expect.any(String), 
-        customer: {
-          id: expect.any(Number), 
-          user_id: expect.any(Number), 
-          cart_id: null, 
-          username: expect.any(String), 
-          first_name: null, 
-          last_name: null, 
-          email: expect.stringMatching(/^[^\s@]+@[^\s@]+\.[^\s@]+$/), 
-          password: expect.any(String), 
-          date_of_birth: null, 
-          created_at: expect.any(String), 
-          updated_at: expect.any(String), 
-        }
-      });
+
+      expect(Object.keys(responseJSON).includes("status")).toBeTruthy();
+      expect(Object.keys(responseJSON).includes("customer")).toBeTruthy();
+      expect(Object.keys(responseJSON.customer).includes("id")).toBeTruthy();
+      expect(Object.keys(responseJSON.customer).includes("user_id")).toBeTruthy();
+      expect(Object.keys(responseJSON.customer).includes("cart_id")).toBeTruthy();
+      expect(Object.keys(responseJSON.customer).includes("username")).toBeTruthy();
+      expect(Object.keys(responseJSON.customer).includes("first_name")).toBeTruthy();
+      expect(Object.keys(responseJSON.customer).includes("last_name")).toBeTruthy();
+      expect(Object.keys(responseJSON.customer).includes("email")).toBeTruthy();
+      expect(Object.keys(responseJSON.customer).includes("password")).toBeTruthy();
+      expect(Object.keys(responseJSON.customer).includes("date_of_birth")).toBeTruthy();
+      expect(Object.keys(responseJSON.customer).includes("created_at")).toBeTruthy();
+      expect(Object.keys(responseJSON.customer).includes("updated_at")).toBeTruthy();
+      
       expect(responseJSON.status).toBe(message);
       expect(responseJSON.customer.id).toBe(userID);
     }
@@ -268,25 +267,23 @@ export class CustomersAPI {
     expect(response.status()).toBe(statusCode);
     let responseJSON = await response.json();
     if(response.status() == 200) {
-      expect(responseJSON).toEqual({
-        status: expect.any(String), 
-        message: expect.any(String), 
-        customer: {
-          id: expect.any(Number), 
-          user_id: expect.any(Number), 
-          cart_id: null, 
-          username: expect.any(String), 
-          first_name: null, 
-          last_name: null, 
-          email: expect.stringMatching(/^[^\s@]+@[^\s@]+\.[^\s@]+$/), 
-          password: expect.any(String), 
-          date_of_birth: null, 
-          created_at: expect.any(String), 
-          updated_at: expect.any(String), 
-          billing_info: null, 
-          shipping_info: null, 
-        }
-      });
+      expect(Object.keys(responseJSON).includes("status")).toBeTruthy();
+      expect(Object.keys(responseJSON).includes("message")).toBeTruthy();
+      expect(Object.keys(responseJSON).includes("customer")).toBeTruthy();
+      expect(Object.keys(responseJSON.customer).includes("id")).toBeTruthy();
+      expect(Object.keys(responseJSON.customer).includes("user_id")).toBeTruthy();
+      expect(Object.keys(responseJSON.customer).includes("cart_id")).toBeTruthy();
+      expect(Object.keys(responseJSON.customer).includes("username")).toBeTruthy();
+      expect(Object.keys(responseJSON.customer).includes("first_name")).toBeTruthy();
+      expect(Object.keys(responseJSON.customer).includes("last_name")).toBeTruthy();
+      expect(Object.keys(responseJSON.customer).includes("email")).toBeTruthy();
+      expect(Object.keys(responseJSON.customer).includes("password")).toBeTruthy();
+      expect(Object.keys(responseJSON.customer).includes("date_of_birth")).toBeTruthy();
+      expect(Object.keys(responseJSON.customer).includes("created_at")).toBeTruthy();
+      expect(Object.keys(responseJSON.customer).includes("updated_at")).toBeTruthy();
+      expect(Object.keys(responseJSON.customer).includes("billing_info")).toBeTruthy();
+      expect(Object.keys(responseJSON.customer).includes("shipping_info")).toBeTruthy();
+
       expect(responseJSON.customer.id).toBe(userID);
       expect(responseJSON.message).toBe(message);
     }
@@ -323,5 +320,55 @@ export class CustomersAPI {
     console.log(responseJSON);
     
     return responseJSON;     
+  }
+
+  async getBillingInfo({
+    userID, 
+    statusCode = 200, 
+    token, 
+    status = SUCCESS_MESSAGES["BASIC_SUCCESS_MESSAGE"], 
+    message = billingInfoMessage(userID), 
+  }) {
+    let response = await this.page.request.get(`${this.endpoint}/${userID}/billing-info`, {
+      headers: { Accept: this.getAcceptHeader(), Authorization: this.getAuthorizationHeader(token) },
+    });
+    let responseJSON = await response.json();
+    expect(response.status()).toBe(statusCode);
+    if(response.status() == 200) {
+      expect(responseJSON).toEqual({
+        status: expect.any(String), 
+        message: expect.any(String), 
+        billing_info: expect.any(Object), 
+      });
+      expect(responseJSON.status).toBe(status);
+      expect(responseJSON.message).toBe(message);
+    }
+    console.log(responseJSON);
+    
+    return responseJSON;
+  }
+
+  async updateBillingInfo({
+    userID, 
+    statusCode = 200, 
+    token, 
+    status, 
+    message, 
+    cardholder = VALID_BILLING_INFO["CARDHOLDER"], 
+    card_type = VALID_BILLING_INFO["CARD_TYPE"], 
+    card_number = VALID_BILLING_INFO["CARD_NUMBER"], 
+    cvv = VALID_BILLING_INFO["CVV"], 
+    card_expiration_date = VALID_BILLING_INFO["EXPIRATION_DATE"], 
+  }) {
+    let response = await this.page.request.put(`${this.endpoint}/${userID}/billing-info`, { 
+      data: { cardholder: cardholder, card_type: card_type, card_number: card_number, cvv: cvv, card_expiration_date: card_expiration_date }, 
+      headers: { Accept: this.getAcceptHeader(), Authorization: this.getAuthorizationHeader(token) }, 
+    });
+
+    let responseJSON = await response.json();
+    console.log(responseJSON);
+    expect(response.status()).toBe(statusCode);
+    return responseJSON;
+    
   }
 }

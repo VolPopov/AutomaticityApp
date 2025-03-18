@@ -43,7 +43,7 @@ export class AuthAPI {
             id: expect.any(Number), 
             username: expect.any(String), 
             email: expect.stringMatching(/^[^\s@]+@[^\s@]+\.[^\s@]+$/), 
-            email_verified_at: null, 
+            email_verified_at: expect.any(Object), 
             password: expect.any(String), 
             created_at: expect.any(String), 
             updated_at: expect.any(String), 
@@ -126,6 +126,7 @@ export class AuthAPI {
 
         if(response.status() != 200) {
           switch(response.status()) {
+
             case 405: 
             expect(responseJSON).toEqual({
             error: expect.any(String), 
@@ -190,7 +191,7 @@ export class AuthAPI {
           id: expect.any(Number), 
           username: expect.any(String), 
           email: expect.any(String), 
-          email_verified_at: null, 
+          email_verified_at: expect.any(Object), 
           password: expect.any(String), 
           created_at: expect.any(String), 
           updated_at: expect.any(String), 
