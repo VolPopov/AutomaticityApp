@@ -32,7 +32,7 @@ test.describe("Customer API tests regarding billing and shipping info", () => {
     });
 
     test("Attempt to update credit card to a text value", { tag: "@regression" }, async ({ customersAPI }) => {
-        await customersAPI.updateBillingInfo({ token: response.auth.token, card_number: INVALID_BILLING_INFO["TEXT_CREDIT_CARD"], statusCode: 422 });
+        await customersAPI.updateBillingInfo({ token: bearerToken, card_number: INVALID_BILLING_INFO["TEXT_CREDIT_CARD"], statusCode: 422 });
     });
 
     test("Attempt to update credit card to a 100 digit number", { tag: "@regression" }, async ({ customersAPI }) => {
@@ -55,11 +55,27 @@ test.describe("Customer API tests regarding billing and shipping info", () => {
         await customersAPI.updateBillingInfo({ token: bearerToken, cardholder: INVALID_BILLING_INFO["CARDHOLDER_STRING_OF_NUMBERS"], statusCode: 422, message: ERROR_MESSAGES["GENERIC_ERROR"], error: ERROR_MESSAGES["CARDHOLDER_INT"] });
     });
 
+    test("Attempt to update cvv to a 10 digit number", { tag: "@regression" }, async ({ customersAPI }) => {
+        await customersAPI.updateBillingInfo({ token: bearerToken, cvv: INVALID_BILLING_INFO["CARDHOLDER_STRING_OF_NUMBERS"], statusCode: 422, message: ERROR_MESSAGES["GENERIC_ERROR"], error: ERROR_MESSAGES["INVALID_CVV"] });
+    });
+
+    test("Attempt to update cvv to a string", { tag: "@regression" }, async ({ customersAPI }) => {
+        await customersAPI.updateBillingInfo({ token: bearerToken, cvv: INVALID_BILLING_INFO["CVV_STRING"], statusCode: 422, message: ERROR_MESSAGES["GENERIC_ERROR"], error: ERROR_MESSAGES["STRING_CVV"] });
+    });
+
     test("Get billing info of customer", { tag: "@smoke" }, async ({ customersAPI }) => {
         await customersAPI.getBillingInfo({ token: bearerToken });
     });
 
     test("Update billing info of customer", { tag: "@smoke" }, async ({ customersAPI }) => {
         await customersAPI.updateBillingInfo({ token: bearerToken });
+    });
+
+    test("Get shipping info of customer", { tag: "@smoke" }, async ({ customersAPI }) => {
+        await customersAPI.getShippingInfo({ token: bearerToken });
+    });
+
+    test("Update shipping info of customer", { tag: "@smoke" }, async ({ customersAPI }) => {
+        await customersAPI.updateShippingInfo({ token: bearerToken });
     });
 });

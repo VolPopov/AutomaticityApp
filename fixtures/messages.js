@@ -4,7 +4,7 @@ const SUCCESS_MESSAGES = {
     USER_LOGGED_IN: "User logged in successfully", 
     USER_LOGGED_OUT: "Successfully logged out", 
     CUSTOMER_DELETED: "Customer deleted successfully.", 
-    UPDATED_BILLING_INFO: "Billinginfo updated successfully."
+    UPDATED_BILLING_INFO: "Billinginfo updated successfully.", 
 };
 
 const ERROR_MESSAGES = {
@@ -31,7 +31,9 @@ const ERROR_MESSAGES = {
     SHORT_CARD_NUMBER: "The card number field must be at least 12 characters.", 
     LONG_CARD_NUMBER: "The card number field must not be greater than 20 characters.", 
     INVALID_EXPIRATION_DATE: "The card expiration date format is invalid. Should be MM/YY", 
-    CARDHOLDER_INT: "The cardholder field must be a string."
+    CARDHOLDER_INT: "The cardholder field must be a string.", 
+    INVALID_CVV: "The cvv field must be 3 digits.", 
+    STRING_CVV: "The cvv field must be an integer.", 
 };
 
 function noID (id) {
@@ -42,4 +44,8 @@ function billingInfoMessage(id) {
     return `Billing information for customer ID ${id}`;
 }
 
-export{ SUCCESS_MESSAGES, ERROR_MESSAGES, noID, billingInfoMessage };
+function shippingInfoMessage(id) {
+    return `Shipping information for customer ID ${id}`;
+}
+
+export{ SUCCESS_MESSAGES, ERROR_MESSAGES, noID, billingInfoMessage, shippingInfoMessage };

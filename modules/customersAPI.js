@@ -1,6 +1,6 @@
 import { expect } from '@playwright/test';
-import { billingInfoMessage, ERROR_MESSAGES, SUCCESS_MESSAGES } from '../fixtures/messages.js';
-import { CUSTOMER_FOR_UPDATES, generateUserCredentials, VALID_BILLING_INFO, VALID_USER_CREDENTIALS } from '../fixtures/credentials.js';
+import { billingInfoMessage, ERROR_MESSAGES, shippingInfoMessage, SUCCESS_MESSAGES } from '../fixtures/messages.js';
+import { CUSTOMER_FOR_UPDATES, generateUserCredentials, VALID_BILLING_INFO, VALID_SHIPPING_INFO, VALID_USER_CREDENTIALS } from '../fixtures/credentials.js';
 import { error } from 'console';
 
 const { username1, email1 } = generateUserCredentials(5);
@@ -465,5 +465,57 @@ export class CustomersAPI {
     }
     return responseJSON;
     
+  }
+
+  async getShippingInfo({
+    userID = VALID_USER_CREDENTIALS["VALID_ID"], 
+    token, 
+    statusCode = 200, 
+    status = SUCCESS_MESSAGES["BASIC_SUCCESS_MESSAGE"], 
+    message = shippingInfoMessage(userID), 
+  }) {
+    let response = await this.page.request.get(`${this.endpoint}/${userID}/shipping-info`, {  
+      headers: { Accept: this.getAcceptHeader(), Authorization: this.getAuthorizationHeader(token) }, 
+    });
+    let responseJSON = await response.json();
+    console.log(responseJSON);
+    expect(response.status()).toBe(statusCode);
+
+    if (response.status() == 200) {
+      expect(responseJSON).toEqual({
+        status: expect.any(String), 
+        message: expect.any(String), 
+        shipping_info: expect.any(Object), 
+      });
+      expect(responseJSON.status).toBe(status);
+      expect(responseJSON.message).toBe(message);
+    }
+
+    return responseJSON;
+  }
+
+  async updateShippingInfo({
+    token, 
+    statusCode = 200, 
+    userID = VALID_USER_CREDENTIALS["VALID_ID"], 
+    message, 
+    error, 
+    first_name = VALID_SHIPPING_INFO["FIRST_NAME"], 
+    last_name = VALID_SHIPPING_INFO["LAST_NAME"], 
+    email = VALID_SHIPPING_INFO["EMAIL"], 
+    street_and_number = VALID_SHIPPING_INFO["STREET_AND_NUMBER"], 
+    phone_number = VALID_SHIPPING_INFO["PHONE_NUMBER"], 
+    city = VALID_SHIPPING_INFO["CITY"], 
+    postal_code = VALID_SHIPPING_INFO["POSTAL_CODE"], 
+    country = VALID_SHIPPING_INFO["COUNTRY"],   
+  }) {
+    let response = await this.page.request.put(`${this.endpoint}/${userID}/shipping-info`, { 
+      data: { first_name: first_name, last_name: last_name, email: email, street_and_number: street_and_number, phone_number: phone_number, city: city, postal_code: postal_code, country: country }, 
+      headers: { Accept: this.getAcceptHeader(), Authorization: this.getAuthorizationHeader(token) }, 
+    });
+    let responseJSON = await response.json();
+    console.log(responseJSON);
+    expect(response.status()).toBe(statusCode);
+    return responseJSON;
   }
 }

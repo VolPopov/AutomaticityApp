@@ -82,12 +82,24 @@ const VALID_BILLING_INFO = {
 
 const INVALID_BILLING_INFO = {
   SHORT_CARD_NUMBER: generateRandomInt(5), 
-  TEXT_CREDIT_CARD: generateRandomString(16), 
+  TEXT_CREDIT_CARD: generateRandomStringNoNumbers(16), 
   LONG_CARD_NUMBER: generateRandomInt(100),  
   INVALID_EXPIRATION_DATE: generateRandomInt(4), 
   EXPIRED_CARD: "01/24", 
   CARDHOLDER_INT: Math.floor(generateRandomInt(10)), 
   CARDHOLDER_STRING_OF_NUMBERS: generateRandomInt(10), 
+  CVV_STRING: generateRandomStringNoNumbers(3), 
 }
 
-export { VALID_USER_CREDENTIALS, INVALID_USER_CREDENTIALS, generateUserCredentials, CUSTOMER_FOR_UPDATES, INVALID_ID, VALID_BILLING_INFO, INVALID_BILLING_INFO }
+const VALID_SHIPPING_INFO = {
+  FIRST_NAME: generateRandomStringNoNumbers(8), 
+  LAST_NAME: generateRandomStringNoNumbers(8), 
+  EMAIL: `${generateRandomStringNoNumbers(5)}@gmail.com`, 
+  STREET_AND_NUMBER: `${generateRandomStringNoNumbers(6)} ${generateRandomInt(2)}`, 
+  PHONE_NUMBER: generateRandomInt(10), 
+  CITY: generateRandomStringNoNumbers(5), 
+  POSTAL_CODE: generateRandomInt(5), 
+  COUNTRY: generateRandomStringNoNumbers(7), 
+}
+
+export { VALID_USER_CREDENTIALS, INVALID_USER_CREDENTIALS, generateUserCredentials, CUSTOMER_FOR_UPDATES, INVALID_ID, VALID_BILLING_INFO, INVALID_BILLING_INFO, VALID_SHIPPING_INFO }
