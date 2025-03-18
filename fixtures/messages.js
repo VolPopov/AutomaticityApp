@@ -3,7 +3,8 @@ const SUCCESS_MESSAGES = {
     USER_CREATED_SUCCESSFULLY: "User created successfully",
     USER_LOGGED_IN: "User logged in successfully", 
     USER_LOGGED_OUT: "Successfully logged out", 
-    CUSTOMER_DELETED: "Customer deleted successfully."
+    CUSTOMER_DELETED: "Customer deleted successfully.", 
+    UPDATED_BILLING_INFO: "Billinginfo updated successfully."
 };
 
 const ERROR_MESSAGES = {

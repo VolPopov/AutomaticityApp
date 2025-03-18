@@ -130,18 +130,26 @@ export class CustomersAPI {
     if(statusCode == 200) {
 
       expect(Object.keys(responseJSON).includes("status")).toBeTruthy();
+      expect(responseJSON.status).toEqual(expect.any(String));
       expect(Object.keys(responseJSON).includes("customer")).toBeTruthy();
       expect(Object.keys(responseJSON.customer).includes("id")).toBeTruthy();
+      expect(responseJSON.customer.id).toEqual(expect.any(Number));
       expect(Object.keys(responseJSON.customer).includes("user_id")).toBeTruthy();
+      expect(responseJSON.customer.user_id).toEqual(expect.any(Number));
       expect(Object.keys(responseJSON.customer).includes("cart_id")).toBeTruthy();
       expect(Object.keys(responseJSON.customer).includes("username")).toBeTruthy();
+      expect(responseJSON.customer.username).toEqual(expect.any(String));
       expect(Object.keys(responseJSON.customer).includes("first_name")).toBeTruthy();
       expect(Object.keys(responseJSON.customer).includes("last_name")).toBeTruthy();
       expect(Object.keys(responseJSON.customer).includes("email")).toBeTruthy();
+      expect(responseJSON.customer.email).toEqual(expect.stringMatching(/^[^\s@]+@[^\s@]+\.[^\s@]+$/));
       expect(Object.keys(responseJSON.customer).includes("password")).toBeTruthy();
+      expect(responseJSON.customer.password).toEqual(expect.any(String));
       expect(Object.keys(responseJSON.customer).includes("date_of_birth")).toBeTruthy();
       expect(Object.keys(responseJSON.customer).includes("created_at")).toBeTruthy();
+      expect(responseJSON.customer.created_at).toEqual(expect.any(String));
       expect(Object.keys(responseJSON.customer).includes("updated_at")).toBeTruthy();
+      expect(responseJSON.customer.updated_at).toEqual(expect.any(String));
       
       expect(responseJSON.status).toBe(message);
       expect(responseJSON.customer.id).toBe(userID);
@@ -268,19 +276,28 @@ export class CustomersAPI {
     let responseJSON = await response.json();
     if(response.status() == 200) {
       expect(Object.keys(responseJSON).includes("status")).toBeTruthy();
+      expect(responseJSON.status).toEqual(expect.any(String));
       expect(Object.keys(responseJSON).includes("message")).toBeTruthy();
+      expect(responseJSON.message).toEqual(expect.any(String));
       expect(Object.keys(responseJSON).includes("customer")).toBeTruthy();
       expect(Object.keys(responseJSON.customer).includes("id")).toBeTruthy();
+      expect(responseJSON.customer.id).toEqual(expect.any(Number));
       expect(Object.keys(responseJSON.customer).includes("user_id")).toBeTruthy();
+      expect(responseJSON.customer.user_id).toEqual(expect.any(Number));
       expect(Object.keys(responseJSON.customer).includes("cart_id")).toBeTruthy();
       expect(Object.keys(responseJSON.customer).includes("username")).toBeTruthy();
+      expect(responseJSON.customer.username).toEqual(expect.any(String));
       expect(Object.keys(responseJSON.customer).includes("first_name")).toBeTruthy();
       expect(Object.keys(responseJSON.customer).includes("last_name")).toBeTruthy();
       expect(Object.keys(responseJSON.customer).includes("email")).toBeTruthy();
+      expect(responseJSON.customer.email).toEqual(expect.stringMatching(/^[^\s@]+@[^\s@]+\.[^\s@]+$/));
       expect(Object.keys(responseJSON.customer).includes("password")).toBeTruthy();
+      expect(responseJSON.customer.password).toEqual(expect.any(String));
       expect(Object.keys(responseJSON.customer).includes("date_of_birth")).toBeTruthy();
       expect(Object.keys(responseJSON.customer).includes("created_at")).toBeTruthy();
+      expect(responseJSON.customer.created_at).toEqual(expect.any(String));
       expect(Object.keys(responseJSON.customer).includes("updated_at")).toBeTruthy();
+      expect(responseJSON.customer.updated_at).toEqual(expect.any(String));
       expect(Object.keys(responseJSON.customer).includes("billing_info")).toBeTruthy();
       expect(Object.keys(responseJSON.customer).includes("shipping_info")).toBeTruthy();
 
@@ -333,7 +350,9 @@ export class CustomersAPI {
       headers: { Accept: this.getAcceptHeader(), Authorization: this.getAuthorizationHeader(token) },
     });
     let responseJSON = await response.json();
+    console.log(responseJSON);
     expect(response.status()).toBe(statusCode);
+
     if(response.status() == 200) {
       expect(responseJSON).toEqual({
         status: expect.any(String), 
@@ -343,7 +362,27 @@ export class CustomersAPI {
       expect(responseJSON.status).toBe(status);
       expect(responseJSON.message).toBe(message);
     }
-    console.log(responseJSON);
+
+    if(response.status() != 200) {
+      switch(response.status()) {
+
+        case 401:
+        expect(responseJSON).toEqual({
+          message: expect.any(String), 
+        });
+        expect(responseJSON.message).toBe(message);
+        break; 
+
+        case 404: 
+        expect(responseJSON).toEqual({
+          error: expect.any(String), 
+        });
+        expect(responseJSON.error).toBe(message);
+        break;
+
+      }
+    }
+    
     
     return responseJSON;
   }
@@ -352,8 +391,8 @@ export class CustomersAPI {
     userID, 
     statusCode = 200, 
     token, 
-    status, 
-    message, 
+    status = SUCCESS_MESSAGES["BASIC_SUCCESS_MESSAGE"], 
+    message = SUCCESS_MESSAGES["UPDATED_BILLING_INFO"], 
     cardholder = VALID_BILLING_INFO["CARDHOLDER"], 
     card_type = VALID_BILLING_INFO["CARD_TYPE"], 
     card_number = VALID_BILLING_INFO["CARD_NUMBER"], 
@@ -368,6 +407,22 @@ export class CustomersAPI {
     let responseJSON = await response.json();
     console.log(responseJSON);
     expect(response.status()).toBe(statusCode);
+
+    if(response.status() == 200) {
+      expect(responseJSON).toEqual({
+        status: expect.any(String), 
+        message: expect.any(String), 
+        billing_info: expect.any(Object), 
+      });
+      expect(responseJSON.status).toBe(status);
+      expect(responseJSON.message).toBe(message);
+      expect(responseJSON.billing_info.customer_id).toBe(userID);
+      expect(responseJSON.billing_info.cardholder).toBe(cardholder);
+      expect(responseJSON.billing_info.card_type).toBe(card_type);
+      expect(responseJSON.billing_info.card_number).toBe(card_number);
+      expect(responseJSON.billing_info.cvv).toBe(cvv);
+      expect(responseJSON.billing_info.card_expiration_date).toBe(card_expiration_date);
+    }
     return responseJSON;
     
   }
