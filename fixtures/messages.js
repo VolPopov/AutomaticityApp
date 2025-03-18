@@ -30,7 +30,8 @@ const ERROR_MESSAGES = {
     NO_CARD_NUMBER: "The card number field is required.", 
     SHORT_CARD_NUMBER: "The card number field must be at least 12 characters.", 
     LONG_CARD_NUMBER: "The card number field must not be greater than 20 characters.", 
-    INVALID_EXPIRATION_DATE: "The card expiration date format is invalid. Should be MM/YY"
+    INVALID_EXPIRATION_DATE: "The card expiration date format is invalid. Should be MM/YY", 
+    CARDHOLDER_INT: "The cardholder field must be a string."
 };
 
 function noID (id) {

@@ -341,7 +341,7 @@ export class CustomersAPI {
   }
 
   async getBillingInfo({
-    userID, 
+    userID = VALID_USER_CREDENTIALS["VALID_ID"], 
     statusCode = 200, 
     token, 
     status = SUCCESS_MESSAGES["BASIC_SUCCESS_MESSAGE"], 
@@ -389,7 +389,7 @@ export class CustomersAPI {
   }
 
   async updateBillingInfo({
-    userID, 
+    userID = VALID_USER_CREDENTIALS["VALID_ID"], 
     statusCode = 200, 
     token, 
     status = SUCCESS_MESSAGES["BASIC_SUCCESS_MESSAGE"], 
@@ -458,7 +458,7 @@ export class CustomersAPI {
         if (responseJSON.errors.card_expiration_date != undefined) {
           expect(responseJSON.errors.card_expiration_date).toContain(error);
         }
-        
+
         break;
 
       }

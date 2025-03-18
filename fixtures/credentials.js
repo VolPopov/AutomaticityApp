@@ -48,6 +48,7 @@ const generateRandomString = length => {
   };
 
 const VALID_USER_CREDENTIALS = {
+    VALID_ID: 37, 
     VALID_USERNAME: "Vol", 
     VALID_EMAIL: "VolPopov@gmail.com", 
     VALID_PASSWORD: "pass123",
@@ -84,6 +85,9 @@ const INVALID_BILLING_INFO = {
   TEXT_CREDIT_CARD: generateRandomString(16), 
   LONG_CARD_NUMBER: generateRandomInt(100),  
   INVALID_EXPIRATION_DATE: generateRandomInt(4), 
+  EXPIRED_CARD: "01/24", 
+  CARDHOLDER_INT: Math.floor(generateRandomInt(10)), 
+  CARDHOLDER_STRING_OF_NUMBERS: generateRandomInt(10), 
 }
 
 export { VALID_USER_CREDENTIALS, INVALID_USER_CREDENTIALS, generateUserCredentials, CUSTOMER_FOR_UPDATES, INVALID_ID, VALID_BILLING_INFO, INVALID_BILLING_INFO }
