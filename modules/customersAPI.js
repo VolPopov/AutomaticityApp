@@ -1,6 +1,7 @@
 import { expect } from '@playwright/test';
 import { billingInfoMessage, ERROR_MESSAGES, SUCCESS_MESSAGES } from '../fixtures/messages.js';
 import { CUSTOMER_FOR_UPDATES, generateUserCredentials, VALID_BILLING_INFO, VALID_USER_CREDENTIALS } from '../fixtures/credentials.js';
+import { error } from 'console';
 
 const { username1, email1 } = generateUserCredentials(5);
 
@@ -393,6 +394,7 @@ export class CustomersAPI {
     token, 
     status = SUCCESS_MESSAGES["BASIC_SUCCESS_MESSAGE"], 
     message = SUCCESS_MESSAGES["UPDATED_BILLING_INFO"], 
+    error,  
     cardholder = VALID_BILLING_INFO["CARDHOLDER"], 
     card_type = VALID_BILLING_INFO["CARD_TYPE"], 
     card_number = VALID_BILLING_INFO["CARD_NUMBER"], 
@@ -406,6 +408,7 @@ export class CustomersAPI {
 
     let responseJSON = await response.json();
     console.log(responseJSON);
+    
     expect(response.status()).toBe(statusCode);
 
     if(response.status() == 200) {
@@ -422,6 +425,43 @@ export class CustomersAPI {
       expect(responseJSON.billing_info.card_number).toBe(card_number);
       expect(responseJSON.billing_info.cvv).toBe(cvv);
       expect(responseJSON.billing_info.card_expiration_date).toBe(card_expiration_date);
+    }
+
+    if (response.status() != 200) {
+      switch(response.status()) {
+        case 404: 
+        expect(responseJSON).toEqual({
+          error: expect.any(String), 
+        });
+        expect(responseJSON.error).toBe(message);
+        break;
+
+        case 422: 
+        expect(responseJSON).toEqual({
+          status: expect.any(String), 
+          errors: expect.any(Object), 
+        });
+        expect(responseJSON.status).toBe(message);
+
+        if (responseJSON.errors.cardholder != undefined) {
+          expect(responseJSON.errors.cardholder).toContain(error);
+        }
+        if (responseJSON.errors.card_number != undefined) {
+          expect(responseJSON.errors.card_number).toContain(error);
+        }
+        if (responseJSON.errors.card_type != undefined) {
+          expect(responseJSON.errors.card_type).toContain(error);
+        }
+        if (responseJSON.errors.cvv != undefined) {
+          expect(responseJSON.errors.cvv).toContain(error);
+        }
+        if (responseJSON.errors.card_expiration_date != undefined) {
+          expect(responseJSON.errors.card_expiration_date).toContain(error);
+        }
+        
+        break;
+
+      }
     }
     return responseJSON;
     

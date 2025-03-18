@@ -8,6 +8,7 @@ const SUCCESS_MESSAGES = {
 };
 
 const ERROR_MESSAGES = {
+    GENERIC_ERROR: "Error", 
     USERNAME_EMAIL_AND_PASSWORD_ALL_MISSING: "The username field is required. (and 2 more errors)",
     EMAIL_AND_PASSWORD_BOTH_MISSING: "The email field is required. (and 1 more error)", 
     USERNAME_MISSING: "The username field is required.",
@@ -25,7 +26,11 @@ const ERROR_MESSAGES = {
     EXPIRED_TOKEN: "Token has expired", 
     METHOD_NOT_ALLOWED: "Method Not Allowed", 
     LONG_USERNAME: "The username field must not be greater than 255 characters.", 
-    USERNAME_IS_NULL: "The username field must be a string."
+    USERNAME_IS_NULL: "The username field must be a string.", 
+    NO_CARD_NUMBER: "The card number field is required.", 
+    SHORT_CARD_NUMBER: "The card number field must be at least 12 characters.", 
+    LONG_CARD_NUMBER: "The card number field must not be greater than 20 characters.", 
+    INVALID_EXPIRATION_DATE: "The card expiration date format is invalid. Should be MM/YY"
 };
 
 function noID (id) {
