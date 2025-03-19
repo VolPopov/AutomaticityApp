@@ -79,7 +79,7 @@ test.describe("Customer API tests", () => {
     });
 
     test("Get information of specific customer", { tag: "@smoke" }, async ({ customersAPI }) => {
-        await customersAPI.getSpecificCustomer({ token: bearerToken })
+        await customersAPI.getSpecificCustomer({ token: bearerToken, userID: 3 })
     });
 
     test("Update customer information", { tag: "@smoke" }, async ({ customersAPI }) => {
