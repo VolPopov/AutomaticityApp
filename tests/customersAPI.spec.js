@@ -4,12 +4,10 @@ import { ERROR_MESSAGES, noID } from '../fixtures/messages.js';
 
 test.describe("Customer API tests", () => {
 
-    let userID;
     let bearerToken;
 
     test.beforeEach("Get user token and ID", async ({ authAPI }) => {
         const response = await authAPI.login({});
-        userID = await response.user.id;
         bearerToken = await response.auth.token;
     });
 
@@ -36,7 +34,7 @@ test.describe("Customer API tests", () => {
         await customersAPI.getSpecificCustomer({ token: INVALID_USER_CREDENTIALS["EXPIRED_TOKEN"], statusCode: 401, message: ERROR_MESSAGES["UNAUTHENTICATED"] });
     });
 
-    test("Attempt to get a customer with no valid ID", { tag: "@regression" }, async({ customersAPI }) => {
+    test("Attempt to get a single customer with no valid ID", { tag: "@regression" }, async({ customersAPI }) => {
         await customersAPI.getSpecificCustomer({ token: bearerToken, userID: INVALID_ID, statusCode: 404, message: noID(INVALID_ID) });
     });
 
@@ -81,7 +79,7 @@ test.describe("Customer API tests", () => {
     });
 
     test("Get information of specific customer", { tag: "@smoke" }, async ({ customersAPI }) => {
-        await customersAPI.getSpecificCustomer({ token: bearerToken, userID: userID })
+        await customersAPI.getSpecificCustomer({ token: bearerToken })
     });
 
     test("Update customer information", { tag: "@smoke" }, async ({ customersAPI }) => {

@@ -61,9 +61,7 @@ export class CustomersAPI {
         break;
 
       }
-    }
-    
-    console.log(responseJSON);
+    }   
     
     return responseJSON;
   }
@@ -111,13 +109,12 @@ export class CustomersAPI {
       });
       expect(responseJSON.error).toBe(error);
     }
-    console.log(responseJSON);
     return responseJSON;
   }
 
   async getSpecificCustomer({
     token, 
-    userID, 
+    userID = VALID_USER_CREDENTIALS["VALID_ID"], 
     statusCode = 200, 
     message = SUCCESS_MESSAGES["BASIC_SUCCESS_MESSAGE"], 
   }) {
@@ -201,9 +198,7 @@ export class CustomersAPI {
         break;
 
       }
-    }
-    console.log(responseJSON);
-    
+    } 
     return responseJSON;
   }
 
@@ -221,9 +216,7 @@ export class CustomersAPI {
     headers: { Accept: this.getAcceptHeader(), Authorization: this.getAuthorizationHeader(token) }, 
     });
 
-    let responseJSON = await response.json();
-    console.log(responseJSON);
-    
+    let responseJSON = await response.json();  
 
     expect(response.status()).toBe(statusCode);
     if (statusCode == 200) {
@@ -361,8 +354,6 @@ export class CustomersAPI {
       }
     }
     
-    console.log(responseJSON);
-    
     return responseJSON;     
   }
 
@@ -377,7 +368,6 @@ export class CustomersAPI {
       headers: { Accept: this.getAcceptHeader(), Authorization: this.getAuthorizationHeader(token) },
     });
     let responseJSON = await response.json();
-    console.log(responseJSON);
     expect(response.status()).toBe(statusCode);
 
     if(response.status() == 200) {
@@ -409,8 +399,6 @@ export class CustomersAPI {
 
       }
     }
-    
-    
     return responseJSON;
   }
 
@@ -437,8 +425,7 @@ export class CustomersAPI {
     });
 
     let responseJSON = await response.json();
-    console.log(responseJSON);
-    
+
     expect(response.status()).toBe(statusCode);
 
     if(response.status() == 200) {
@@ -537,7 +524,6 @@ export class CustomersAPI {
     }
 
     let responseJSON = await response.json();
-    console.log(responseJSON);
     expect(response.status()).toBe(statusCode);
 
     if(response.status() == 405) {
@@ -562,7 +548,6 @@ export class CustomersAPI {
       headers: { Accept: this.getAcceptHeader(), Authorization: this.getAuthorizationHeader(token) }, 
     });
     let responseJSON = await response.json();
-    console.log(responseJSON);
     expect(response.status()).toBe(statusCode);
 
     if (response.status() == 200) {
@@ -607,7 +592,6 @@ export class CustomersAPI {
       headers: { Accept: this.getAcceptHeader(), Authorization: this.getAuthorizationHeader(token) }, 
     });
     let responseJSON = await response.json();
-    console.log(responseJSON);
     expect(response.status()).toBe(statusCode);
 
     if(response.status() == 200) {
@@ -682,5 +666,4 @@ export class CustomersAPI {
     }
     return responseJSON;
   }
-
 }
