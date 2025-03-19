@@ -20,10 +20,10 @@ test.describe("Customer API tests", () => {
     });
 
     test("Attempt to list all customers using unvalid methods", { tag: "@regression" }, async ({ customersAPI }) => {
-        await customersAPI.invalidGetCustomers({ method: "post", token: bearerToken });
-        await customersAPI.invalidGetCustomers({ method: "put", token: bearerToken });
-        await customersAPI.invalidGetCustomers({ method: "patch", token: bearerToken });
-        await customersAPI.invalidGetCustomers({ method: "delete", token: bearerToken });
+        await customersAPI.getCustomers({ method: "post", token: bearerToken, statusCode: 405, message: ERROR_MESSAGES["METHOD_NOT_ALLOWED"] });
+        await customersAPI.getCustomers({ method: "put", token: bearerToken, statusCode: 405, message: ERROR_MESSAGES["METHOD_NOT_ALLOWED"] });
+        await customersAPI.getCustomers({ method: "patch", token: bearerToken, statusCode: 405, message: ERROR_MESSAGES["METHOD_NOT_ALLOWED"] });
+        await customersAPI.getCustomers({ method: "delete", token: bearerToken, statusCode: 405, message: ERROR_MESSAGES["METHOD_NOT_ALLOWED"] });
     });
 
     test("Attempt to get a single customer without a token", { tag: "@regression" }, async ({ customersAPI }) => {

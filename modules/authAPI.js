@@ -3,6 +3,7 @@ import { VALID_USER_CREDENTIALS, generateUserCredentials } from "../fixtures/cre
 import { ERROR_MESSAGES, SUCCESS_MESSAGES } from '../fixtures/messages.js';
 
 const { username1, email1, password1 } = generateUserCredentials(5);
+let stringreq = "await this.page.request.post";
 
 export class AuthAPI {
     constructor(page) {
@@ -24,16 +25,17 @@ export class AuthAPI {
       statusCode = 200,  
       message = SUCCESS_MESSAGES["USER_LOGGED_IN"], 
       status = SUCCESS_MESSAGES["BASIC_SUCCESS_MESSAGE"], 
-      error, 
+      error,
+      method = "post", 
     }) {
-      let response = await this.page.request.post(`${this.endpoint}/login`, {
+      let response = await this.page.request[method](`${this.endpoint}/login`, {
         data: { email: email, password: password,},
         headers: { Accept: this.getAcceptHeader() }, 
       });
       
       expect(response.status()).toBe(statusCode);
      
-      let responseJSON = await response.json();
+      let responseJSON = await response.json();      
 
       if(response.status() == 200) {
         expect(responseJSON).toEqual({
@@ -93,8 +95,9 @@ export class AuthAPI {
         statusCode = 200, 
         status = SUCCESS_MESSAGES["BASIC_SUCCESS_MESSAGE"], 
         message = SUCCESS_MESSAGES["USER_CREATED_SUCCESSFULLY"], 
+        method = "post"
       }) {
-        let response = await this.page.request.post(`${this.endpoint}/register`, {
+        let response = await this.page.request[method](`${this.endpoint}/register`, {
           data: { username: username, email: email, password: password },
           headers: { Accept: this.getAcceptHeader() },
         });
@@ -131,7 +134,7 @@ export class AuthAPI {
             expect(responseJSON).toEqual({
             error: expect.any(String), 
             });
-            expect(responseJSON.error).toBe(error);
+            expect(responseJSON.error).toBe(message);
             break;
 
             case 422: 
@@ -230,111 +233,4 @@ export class AuthAPI {
       }
       return responseJSON;
     }
-
-    async invalidMethodLogin({
-      email = VALID_USER_CREDENTIALS["VALID_EMAIL"], 
-      password = VALID_USER_CREDENTIALS["VALID_PASSWORD"], 
-      statusCode = 405,  
-      error = ERROR_MESSAGES["METHOD_NOT_ALLOWED"], 
-      method,    
-    }) {
-      let response;
-
-      switch(method) {
-
-        case("get"): 
-        response = await this.page.request.get(`${this.endpoint}/login`, {
-        data: { email: email, password: password,},
-        headers: { Accept: this.getAcceptHeader() }, 
-        });
-        break;
-
-        case("put"): 
-        response = await this.page.request.put(`${this.endpoint}/login`, {
-        data: { email: email, password: password,},
-        headers: { Accept: this.getAcceptHeader() }, 
-        });
-        break;
-
-        case("patch"): 
-        response = await this.page.request.patch(`${this.endpoint}/login`, {
-        data: { email: email, password: password,},
-        headers: { Accept: this.getAcceptHeader() }, 
-        });
-        break;
-
-        case("delete"): 
-        response = await this.page.request.delete(`${this.endpoint}/login`, {
-        data: { email: email, password: password,},
-        headers: { Accept: this.getAcceptHeader() }, 
-        });
-        break;
-      }
-      
-      expect(response.status()).toBe(statusCode);
-
-      let responseJSON = await response.json();
-
-      if(response.status() == 405) {
-        expect(responseJSON).toEqual({
-          error: expect.any(String), 
-        });
-      expect(responseJSON.error).toBe(error);
-      }
-  }
-
-  async invalidMethodRegister({
-    username = username1, 
-    email = email1, 
-    password = password1, 
-    statusCode = 405,  
-    error = ERROR_MESSAGES["METHOD_NOT_ALLOWED"], 
-    method, 
-  }) {
-
-    let response;
-
-    switch(method) {
-
-      case("get"): 
-      response = await this.page.request.get(`${this.endpoint}/register`, {
-      data: { username: username, email: email, password: password },
-      headers: { Accept: this.getAcceptHeader() }, 
-      });
-      break;
-
-      case("put"): 
-      response = await this.page.request.put(`${this.endpoint}/register`, {
-      data: { username: username, email: email, password: password },
-      headers: { Accept: this.getAcceptHeader() }, 
-      });
-      break;
-
-      case("patch"): 
-      response = await this.page.request.patch(`${this.endpoint}/register`, {
-      data: { username: username, email: email, password: password },
-      headers: { Accept: this.getAcceptHeader() }, 
-      });
-      break;
-
-      case("delete"): 
-      response = await this.page.request.delete(`${this.endpoint}/register`, {
-      data: { username: username, email: email, password: password },
-      headers: { Accept: this.getAcceptHeader() }, 
-      });
-      break;
-    }
-    
-    expect(response.status()).toBe(statusCode);
-
-    let responseJSON = await response.json();
-    
-    if(response.status() == 405) {
-      expect(responseJSON).toEqual({
-        error: expect.any(String), 
-      });
-
-    expect(responseJSON.error).toBe(error);
-    }
-  }
 }

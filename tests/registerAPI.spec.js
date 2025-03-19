@@ -70,10 +70,10 @@ test.describe("Register API tests", () => {
   });
 
   test("Attempt to register with an invalid methods", { tag: "@regression" }, async ({ authAPI }) => {
-    await authAPI.invalidMethodRegister({ method: "get" });
-    await authAPI.invalidMethodRegister({ method: "put" });
-    await authAPI.invalidMethodRegister({ method: "patch" });
-    await authAPI.invalidMethodRegister({ method: "delete" });
+    await authAPI.register({ method: "get", statusCode: 405, message: ERROR_MESSAGES["METHOD_NOT_ALLOWED"] });
+    await authAPI.register({ method: "put", statusCode: 405, message: ERROR_MESSAGES["METHOD_NOT_ALLOWED"] });
+    await authAPI.register({ method: "patch", statusCode: 405, message: ERROR_MESSAGES["METHOD_NOT_ALLOWED"] });
+    await authAPI.register({ method: "delete", statusCode: 405, message: ERROR_MESSAGES["METHOD_NOT_ALLOWED"] });
   });
 
   test("Succesful register of new user", { tag: "@smoke" }, async ({ authAPI }) => {

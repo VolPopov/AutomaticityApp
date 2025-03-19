@@ -23,8 +23,9 @@ export class CustomersAPI {
     token, 
     statusCode = 200, 
     message = SUCCESS_MESSAGES["BASIC_SUCCESS_MESSAGE"], 
+    method = "get"
   }) {
-    let response = await this.page.request.get(`${this.endpoint}`, {
+    let response = await this.page.request[method](`${this.endpoint}`, {
       headers: { Accept: this.getAcceptHeader(), Authorization: this.getAuthorizationHeader(token) }, 
     });
 
@@ -63,52 +64,6 @@ export class CustomersAPI {
       }
     }   
     
-    return responseJSON;
-  }
-
-  async invalidGetCustomers({
-    statusCode = 405, 
-    token, 
-    method, 
-    error = ERROR_MESSAGES["METHOD_NOT_ALLOWED"], 
-  }) {
-    let response;
-
-    switch(method) {
-
-      case("post"): 
-      response = await this.page.request.post(`${this.endpoint}`, {
-      headers: { Accept: this.getAcceptHeader(), Authorization: this.getAuthorizationHeader(token) }, 
-      });
-      break;
-
-      case("put"): 
-      response = await this.page.request.put(`${this.endpoint}`, {
-      headers: { Accept: this.getAcceptHeader(), Authorization: this.getAuthorizationHeader(token) }, 
-      });
-      break;
-
-      case("patch"): 
-      response = await this.page.request.patch(`${this.endpoint}`, {
-      headers: { Accept: this.getAcceptHeader(), Authorization: this.getAuthorizationHeader(token) }, 
-      });
-      break;
-
-      case("delete"): 
-      response = await this.page.request.post(`${this.endpoint}`, {
-      headers: { Accept: this.getAcceptHeader(), Authorization: this.getAuthorizationHeader(token) }, 
-      });
-      break;
-    }
-
-    expect(response.status()).toBe(statusCode);
-    let responseJSON = await response.json();
-    if( statusCode == 405) {
-      expect(responseJSON).toEqual({
-        error: expect.any(String)
-      });
-      expect(responseJSON.error).toBe(error);
-    }
     return responseJSON;
   }
 
@@ -198,7 +153,9 @@ export class CustomersAPI {
         break;
 
       }
-    } 
+    }
+    console.log(responseJSON);
+    
     return responseJSON;
   }
 
@@ -216,7 +173,9 @@ export class CustomersAPI {
     headers: { Accept: this.getAcceptHeader(), Authorization: this.getAuthorizationHeader(token) }, 
     });
 
-    let responseJSON = await response.json();  
+    let responseJSON = await response.json();
+    console.log(responseJSON);
+    
 
     expect(response.status()).toBe(statusCode);
     if (statusCode == 200) {
@@ -354,6 +313,8 @@ export class CustomersAPI {
       }
     }
     
+    console.log(responseJSON);
+    
     return responseJSON;     
   }
 
@@ -363,11 +324,13 @@ export class CustomersAPI {
     token, 
     status = SUCCESS_MESSAGES["BASIC_SUCCESS_MESSAGE"], 
     message = billingInfoMessage(userID), 
+    method = "get"
   }) {
-    let response = await this.page.request.get(`${this.endpoint}/${userID}/billing-info`, {
+    let response = await this.page.request[method](`${this.endpoint}/${userID}/billing-info`, {
       headers: { Accept: this.getAcceptHeader(), Authorization: this.getAuthorizationHeader(token) },
     });
     let responseJSON = await response.json();
+    console.log(responseJSON);
     expect(response.status()).toBe(statusCode);
 
     if(response.status() == 200) {
@@ -397,8 +360,17 @@ export class CustomersAPI {
         expect(responseJSON.error).toBe(message);
         break;
 
+        case 405:
+        expect(responseJSON).toEqual({
+          error: expect.any(String), 
+        });
+        expect(responseJSON.error).toBe(message);
+        break;
+
       }
     }
+    
+    
     return responseJSON;
   }
 
@@ -425,7 +397,8 @@ export class CustomersAPI {
     });
 
     let responseJSON = await response.json();
-
+    console.log(responseJSON);
+    
     expect(response.status()).toBe(statusCode);
 
     if(response.status() == 200) {
@@ -492,62 +465,19 @@ export class CustomersAPI {
     
   }
 
-  async invalidMethods({
-    userID = VALID_USER_CREDENTIALS["VALID_ID"], 
-    method, 
-    typeOfInfo, 
-    token, 
-    statusCode = 405, 
-    error = ERROR_MESSAGES["METHOD_NOT_ALLOWED"], 
-  }) {
-
-    let response;
-
-    switch(method) {
-      case("post"):
-        response = await this.page.request.post(`${this.endpoint}/${userID}/${typeOfInfo}`, {
-        headers: { Accept: this.getAcceptHeader(), Authorization: this.getAuthorizationHeader(token) },
-        });
-        break;
-
-      case("patch"):
-        response = await this.page.request.patch(`${this.endpoint}/${userID}/${typeOfInfo}`, {
-        headers: { Accept: this.getAcceptHeader(), Authorization: this.getAuthorizationHeader(token) },
-      });  
-      break;
-
-      case("delete"):
-        response = await this.page.request.delete(`${this.endpoint}/${userID}/${typeOfInfo}`, {
-        headers: { Accept: this.getAcceptHeader(), Authorization: this.getAuthorizationHeader(token) },
-      });
-      break;
-    }
-
-    let responseJSON = await response.json();
-    expect(response.status()).toBe(statusCode);
-
-    if(response.status() == 405) {
-      expect(responseJSON).toEqual({
-        error: expect.any(String), 
-      });
-      expect(responseJSON.error).toBe(error);
-    }
-    
-    return responseJSON;
-
-  }
-
   async getShippingInfo({
     userID = VALID_USER_CREDENTIALS["VALID_ID"], 
     token, 
     statusCode = 200, 
     status = SUCCESS_MESSAGES["BASIC_SUCCESS_MESSAGE"], 
     message = shippingInfoMessage(userID), 
+    method = "get"
   }) {
-    let response = await this.page.request.get(`${this.endpoint}/${userID}/shipping-info`, {  
+    let response = await this.page.request[method](`${this.endpoint}/${userID}/shipping-info`, {  
       headers: { Accept: this.getAcceptHeader(), Authorization: this.getAuthorizationHeader(token) }, 
     });
     let responseJSON = await response.json();
+    console.log(responseJSON);
     expect(response.status()).toBe(statusCode);
 
     if (response.status() == 200) {
@@ -558,6 +488,32 @@ export class CustomersAPI {
       });
       expect(responseJSON.status).toBe(status);
       expect(responseJSON.message).toBe(message);
+    }
+
+    if(response.status() != 200) {
+      switch(response.status()) {
+
+        case 401:
+        expect(responseJSON).toEqual({
+          message: expect.any(String), 
+        });
+        expect(responseJSON.message).toBe(message);
+        break; 
+
+        case 404: 
+        expect(responseJSON).toEqual({
+          error: expect.any(String), 
+        });
+        expect(responseJSON.error).toBe(message);
+        break;
+
+        case 405:
+        expect(responseJSON).toEqual({
+          error: expect.any(String), 
+        });
+        expect(responseJSON.error).toBe(message);
+        break;
+      }
     }
 
     return responseJSON;
@@ -592,6 +548,7 @@ export class CustomersAPI {
       headers: { Accept: this.getAcceptHeader(), Authorization: this.getAuthorizationHeader(token) }, 
     });
     let responseJSON = await response.json();
+    console.log(responseJSON);
     expect(response.status()).toBe(statusCode);
 
     if(response.status() == 200) {
@@ -666,4 +623,5 @@ export class CustomersAPI {
     }
     return responseJSON;
   }
+
 }

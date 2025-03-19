@@ -20,9 +20,9 @@ test.describe("Customer API tests regarding billing and shipping info", () => {
     });
 
     test("Attempt to get billing info using invalid methods", { tag: "@regression" }, async ({ customersAPI }) => {
-        await customersAPI.invalidMethods({ token: bearerToken, method: "post", typeOfInfo: "billing-info" });
-        await customersAPI.invalidMethods({ token: bearerToken, method: "patch", typeOfInfo: "billing-info" });
-        await customersAPI.invalidMethods({ token: bearerToken, method: "delete", typeOfInfo: "billing-info" });
+        await customersAPI.getBillingInfo({ token: bearerToken, method: "post", statusCode: 405, message: ERROR_MESSAGES["METHOD_NOT_ALLOWED"] });
+        await customersAPI.getBillingInfo({ token: bearerToken, method: "patch", statusCode: 405, message: ERROR_MESSAGES["METHOD_NOT_ALLOWED"] });
+        await customersAPI.getBillingInfo({ token: bearerToken, method: "delete", statusCode: 405, message: ERROR_MESSAGES["METHOD_NOT_ALLOWED"] });
     });
 
     test("Attempt to update billing info without a token", { tag: "@regression" }, async ({ customersAPI }) => {
@@ -90,9 +90,9 @@ test.describe("Customer API tests regarding billing and shipping info", () => {
     });
 
     test("Attempt to get shipping info using invalid methods", { tag: "@regression" }, async ({ customersAPI }) => {
-        await customersAPI.invalidMethods({ token: bearerToken, method: "post", typeOfInfo: "shipping-info" });
-        await customersAPI.invalidMethods({ token: bearerToken, method: "patch", typeOfInfo: "shipping-info" });
-        await customersAPI.invalidMethods({ token: bearerToken, method: "delete", typeOfInfo: "shipping-info" });
+        await customersAPI.getShippingInfo({ token: bearerToken, method: "post", statusCode: 405, message: ERROR_MESSAGES["METHOD_NOT_ALLOWED"] });
+        await customersAPI.getShippingInfo({ token: bearerToken, method: "patch", statusCode: 405, message: ERROR_MESSAGES["METHOD_NOT_ALLOWED"] });
+        await customersAPI.getShippingInfo({ token: bearerToken, method: "delete", statusCode: 405, message: ERROR_MESSAGES["METHOD_NOT_ALLOWED"] });
     });
 
     test("Attempt to update shipping info to empty strings", { tag: "@regression" }, async ({ customersAPI }) => {
