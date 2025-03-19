@@ -417,15 +417,19 @@ export class CustomersAPI {
   async updateBillingInfo({
     userID = VALID_USER_CREDENTIALS["VALID_ID"], 
     statusCode = 200, 
-    token, 
+    token,  
     status = SUCCESS_MESSAGES["BASIC_SUCCESS_MESSAGE"], 
-    message = SUCCESS_MESSAGES["UPDATED_BILLING_INFO"], 
-    error,  
+    message = SUCCESS_MESSAGES["UPDATED_BILLING_INFO"],   
     cardholder = VALID_BILLING_INFO["CARDHOLDER"], 
     card_type = VALID_BILLING_INFO["CARD_TYPE"], 
     card_number = VALID_BILLING_INFO["CARD_NUMBER"], 
     cvv = VALID_BILLING_INFO["CVV"], 
     card_expiration_date = VALID_BILLING_INFO["EXPIRATION_DATE"], 
+    cardholder_error = ERROR_MESSAGES["NO_CARDHOLDER"], 
+    card_type_error = ERROR_MESSAGES["NO_CARD_TYPE"], 
+    card_number_error = ERROR_MESSAGES["NO_CARD_NUMBER"], 
+    cvv_error = ERROR_MESSAGES["NO_CVV"], 
+    card_expiration_date_error = ERROR_MESSAGES["NO_CARD_EXPIRATION_DATE"], 
   }) {
     let response = await this.page.request.put(`${this.endpoint}/${userID}/billing-info`, { 
       data: { cardholder: cardholder, card_type: card_type, card_number: card_number, cvv: cvv, card_expiration_date: card_expiration_date }, 
@@ -455,6 +459,14 @@ export class CustomersAPI {
 
     if (response.status() != 200) {
       switch(response.status()) {
+
+        case 401:
+        expect(responseJSON).toEqual({
+          message: expect.any(String), 
+        });
+        expect(responseJSON.message).toBe(message);
+        break;  
+
         case 404: 
         expect(responseJSON).toEqual({
           error: expect.any(String), 
@@ -470,19 +482,19 @@ export class CustomersAPI {
         expect(responseJSON.status).toBe(message);
 
         if (responseJSON.errors.cardholder != undefined) {
-          expect(responseJSON.errors.cardholder).toContain(error);
+          expect(responseJSON.errors.cardholder).toContain(cardholder_error);
         }
         if (responseJSON.errors.card_number != undefined) {
-          expect(responseJSON.errors.card_number).toContain(error);
+          expect(responseJSON.errors.card_number).toContain(card_number_error);
         }
         if (responseJSON.errors.card_type != undefined) {
-          expect(responseJSON.errors.card_type).toContain(error);
+          expect(responseJSON.errors.card_type).toContain(card_type_error);
         }
         if (responseJSON.errors.cvv != undefined) {
-          expect(responseJSON.errors.cvv).toContain(error);
+          expect(responseJSON.errors.cvv).toContain(cvv_error);
         }
         if (responseJSON.errors.card_expiration_date != undefined) {
-          expect(responseJSON.errors.card_expiration_date).toContain(error);
+          expect(responseJSON.errors.card_expiration_date).toContain(card_expiration_date_error);
         }
 
         break;
@@ -491,6 +503,52 @@ export class CustomersAPI {
     }
     return responseJSON;
     
+  }
+
+  async invalidMethods({
+    userID = VALID_USER_CREDENTIALS["VALID_ID"], 
+    method, 
+    typeOfInfo, 
+    token, 
+    statusCode = 405, 
+    error = ERROR_MESSAGES["METHOD_NOT_ALLOWED"], 
+  }) {
+
+    let response;
+
+    switch(method) {
+      case("post"):
+        response = await this.page.request.post(`${this.endpoint}/${userID}/${typeOfInfo}`, {
+        headers: { Accept: this.getAcceptHeader(), Authorization: this.getAuthorizationHeader(token) },
+        });
+        break;
+
+      case("patch"):
+        response = await this.page.request.patch(`${this.endpoint}/${userID}/${typeOfInfo}`, {
+        headers: { Accept: this.getAcceptHeader(), Authorization: this.getAuthorizationHeader(token) },
+      });  
+      break;
+
+      case("delete"):
+        response = await this.page.request.delete(`${this.endpoint}/${userID}/${typeOfInfo}`, {
+        headers: { Accept: this.getAcceptHeader(), Authorization: this.getAuthorizationHeader(token) },
+      });
+      break;
+    }
+
+    let responseJSON = await response.json();
+    console.log(responseJSON);
+    expect(response.status()).toBe(statusCode);
+
+    if(response.status() == 405) {
+      expect(responseJSON).toEqual({
+        error: expect.any(String), 
+      });
+      expect(responseJSON.error).toBe(error);
+    }
+    
+    return responseJSON;
+
   }
 
   async getShippingInfo({
@@ -534,7 +592,15 @@ export class CustomersAPI {
     phone_number = VALID_SHIPPING_INFO["PHONE_NUMBER"], 
     city = VALID_SHIPPING_INFO["CITY"], 
     postal_code = VALID_SHIPPING_INFO["POSTAL_CODE"], 
-    country = VALID_SHIPPING_INFO["COUNTRY"],   
+    country = VALID_SHIPPING_INFO["COUNTRY"], 
+    first_name_error = ERROR_MESSAGES["NO_FIRST_NAME"], 
+    last_name_error = ERROR_MESSAGES["NO_LAST_NAME"], 
+    email_error = ERROR_MESSAGES["EMAIL_MISSING"], 
+    street_and_number_error = ERROR_MESSAGES["NO_STREET_AND_NUMBER"], 
+    phone_number_error = ERROR_MESSAGES["NO_PHONE_NUMBER"], 
+    city_error = ERROR_MESSAGES["NO_CITY"], 
+    postal_code_error = ERROR_MESSAGES["NO_POSTAL_CODE"], 
+    country_error = ERROR_MESSAGES["NO_COUNTRY"], 
   }) {
     let response = await this.page.request.put(`${this.endpoint}/${userID}/shipping-info`, { 
       data: { first_name: first_name, last_name: last_name, email: email, street_and_number: street_and_number, phone_number: phone_number, city: city, postal_code: postal_code, country: country }, 
@@ -562,6 +628,59 @@ export class CustomersAPI {
       expect(responseJSON.shipping_info.phone_number).toBe(phone_number);
       expect(responseJSON.shipping_info.email).toBe(email);
     }
+
+    if(response.status() != 200) {
+      switch(response.status()) {
+
+        case 401: 
+        expect(responseJSON).toEqual({
+          message: expect.any(String), 
+        });
+        expect(responseJSON.message).toBe(error);
+        break;
+
+        case 404:
+        expect(responseJSON).toEqual({
+          error: expect.any(String),
+        });
+        expect(responseJSON.error).toBe(error);
+        break;
+
+        case 422: 
+        expect(responseJSON).toEqual({
+          status: expect.any(String), 
+          errors: expect.any(Object), 
+        });
+        expect(responseJSON.status).toBe(message);
+
+        if (responseJSON.errors.first_name != undefined) {
+          expect(responseJSON.errors.first_name).toContain(first_name_error);
+        }
+        if (responseJSON.errors.last_name != undefined) {
+          expect(responseJSON.errors.last_name).toContain(last_name_error);
+        }
+        if (responseJSON.errors.email != undefined) {
+          expect(responseJSON.errors.email).toContain(email_error);
+        }
+        if (responseJSON.errors.street_and_number != undefined) {
+          expect(responseJSON.errors.street_and_number).toContain(street_and_number_error);
+        }
+        if (responseJSON.errors.phone_number != undefined) {
+          expect(responseJSON.errors.phone_number).toContain(phone_number_error);
+        }
+        if (responseJSON.errors.city != undefined) {
+          expect(responseJSON.errors.city).toContain(city_error);
+        }
+        if (responseJSON.errors.postal_code != undefined) {
+          expect(responseJSON.errors.postal_code).toContain(postal_code_error);
+        }
+        if (responseJSON.errors.country != undefined) {
+          expect(responseJSON.errors.country).toContain(country_error);
+        }
+        break;
+      }
+    }
     return responseJSON;
   }
+
 }
