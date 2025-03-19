@@ -3,7 +3,6 @@ import { VALID_USER_CREDENTIALS, generateUserCredentials } from "../fixtures/cre
 import { ERROR_MESSAGES, SUCCESS_MESSAGES } from '../fixtures/messages.js';
 
 const { username1, email1, password1 } = generateUserCredentials(5);
-let stringreq = "await this.page.request.post";
 
 export class AuthAPI {
     constructor(page) {
@@ -59,31 +58,19 @@ export class AuthAPI {
         expect(responseJSON.status).toBe(status);
       }
 
-      if(response.status() != 200) {
-        switch(response.status()) {
+      else if(response.status() == 422) {
+        expect(responseJSON).toEqual({
+        message: expect.any(String), 
+        errors: expect.any(Object), 
+        });
+        expect(responseJSON.message).toBe(message);
+      }
 
-          case 401: 
-          expect(responseJSON).toEqual({
-            error: expect.any(String), 
-          });
-          expect(responseJSON.error).toBe(error);
-          break;
-
-          case 405:
-          expect(responseJSON).toEqual({
-          error: expect.any(String), 
-          });
-          expect(responseJSON.error).toBe(error);  
-          break;
-
-          case 422: 
-          expect(responseJSON).toEqual({
-          message: expect.any(String), 
-          errors: expect.any(Object), 
-          });
-          expect(responseJSON.message).toBe(message);
-          break;
-        }
+      else {
+        expect(responseJSON).toEqual({
+        error: expect.any(String), 
+        });
+        expect(responseJSON.error).toBe(error);
       }
       return responseJSON;
     }

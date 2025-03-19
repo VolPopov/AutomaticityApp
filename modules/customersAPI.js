@@ -36,34 +36,20 @@ export class CustomersAPI {
       expect(responseJSON.status).toBe(message);
     }
 
-    if(statusCode != 200) {
+    else if(statusCode == 405) {
+      expect(responseJSON).toEqual({
+      error: expect.any(String), 
+      });
+      expect(responseJSON.error).toBe(message);
+    }
 
-      switch(response.status()) {
+    else {
+      expect(responseJSON).toEqual({
+      message: expect.any(String), 
+      });
+      expect(responseJSON.message).toBe(message);
+    }
 
-        case 401:
-        expect(responseJSON).toEqual({
-        message: expect.any(String), 
-        });
-        expect(responseJSON.message).toBe(message);
-        break;
-
-        case 405:
-        expect(responseJSON).toEqual({
-        error: expect.any(String), 
-        });
-        expect(responseJSON.error).toBe(message);
-        break;
-
-        case 500:
-        expect(responseJSON).toEqual({
-        message: expect.any(String), 
-        });
-        expect(responseJSON.message).toBe(message);
-        break;
-
-      }
-    }   
-    
     return responseJSON;
   }
 
@@ -154,7 +140,6 @@ export class CustomersAPI {
 
       }
     }
-    console.log(responseJSON);
     
     return responseJSON;
   }
@@ -174,7 +159,6 @@ export class CustomersAPI {
     });
 
     let responseJSON = await response.json();
-    console.log(responseJSON);
     
 
     expect(response.status()).toBe(statusCode);
@@ -312,9 +296,7 @@ export class CustomersAPI {
          break;
       }
     }
-    
-    console.log(responseJSON);
-    
+        
     return responseJSON;     
   }
 
@@ -330,7 +312,6 @@ export class CustomersAPI {
       headers: { Accept: this.getAcceptHeader(), Authorization: this.getAuthorizationHeader(token) },
     });
     let responseJSON = await response.json();
-    console.log(responseJSON);
     expect(response.status()).toBe(statusCode);
 
     if(response.status() == 200) {
@@ -397,7 +378,6 @@ export class CustomersAPI {
     });
 
     let responseJSON = await response.json();
-    console.log(responseJSON);
     
     expect(response.status()).toBe(statusCode);
 
@@ -477,7 +457,6 @@ export class CustomersAPI {
       headers: { Accept: this.getAcceptHeader(), Authorization: this.getAuthorizationHeader(token) }, 
     });
     let responseJSON = await response.json();
-    console.log(responseJSON);
     expect(response.status()).toBe(statusCode);
 
     if (response.status() == 200) {
@@ -548,7 +527,6 @@ export class CustomersAPI {
       headers: { Accept: this.getAcceptHeader(), Authorization: this.getAuthorizationHeader(token) }, 
     });
     let responseJSON = await response.json();
-    console.log(responseJSON);
     expect(response.status()).toBe(statusCode);
 
     if(response.status() == 200) {
