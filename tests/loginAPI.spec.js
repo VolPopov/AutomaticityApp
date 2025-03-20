@@ -25,10 +25,10 @@ test.describe("Login API tests", () => {
   });
   
   test("Attempt to log in using invalid methods", { tag: "@regression" }, async ({ authAPI }) => {
-    await authAPI.invalidMethodLogin({ method: "get" });
-    await authAPI.invalidMethodLogin({ method: "put" });
-    await authAPI.invalidMethodLogin({ method: "patch" });
-    await authAPI.invalidMethodLogin({ method: "delete" });
+    await authAPI.login({ method: "get", statusCode: 405, error: ERROR_MESSAGES["METHOD_NOT_ALLOWED"] });
+    await authAPI.login({ method: "put", statusCode: 405, error: ERROR_MESSAGES["METHOD_NOT_ALLOWED"] });
+    await authAPI.login({ method: "patch", statusCode: 405, error: ERROR_MESSAGES["METHOD_NOT_ALLOWED"] });
+    await authAPI.login({ method: "delete", statusCode: 405, error: ERROR_MESSAGES["METHOD_NOT_ALLOWED"] });
   });
 
   test('Succesful login with valid credentials', { tag: "@smoke" }, async ({ authAPI }) => {
