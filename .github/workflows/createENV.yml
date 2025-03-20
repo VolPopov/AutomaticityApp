@@ -1,23 +1,15 @@
-name: Create envfile
+name: Using GitHub Secrets
 
-on: [ push ]
+on: [push]
 
 jobs:
+    using-github-secrets:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout repository
+              uses: actions/checkout@v3
 
-  create-envfile:
- 
-    runs-on: ubuntu-latest
- 
-    steps:
-    - name: Make envfile
-      uses: SpicyPizza/create-envfile@v2.0
-      with:
-        envkey_DEBUG: false
-        envkey_SOME_API_KEY: "123456abcdef"
-        BASE_URL: ${{ secrets.BASE_URL }}
-        envkey_VARIABLE: ${{ vars.BASE_URL }}
-        some_other_variable: foobar
-        directory: .
-        file_name: .env
-        fail_on_empty: false
-        sort_keys: false
+            - name: Create .env file
+              run: |
+                  touch .env
+                  echo "${{secrets.BASE_URL}}" >> .env
