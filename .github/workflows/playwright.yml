@@ -5,6 +5,7 @@ on:
   pull_request:
     branches: [ main, master ]
 jobs:
+
   test:
     env:
         BASE_URL: ${{ vars.BASE_URL }}
