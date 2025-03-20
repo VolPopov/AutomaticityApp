@@ -14,7 +14,7 @@ jobs:
       with:
         envkey_DEBUG: false
         envkey_SOME_API_KEY: "123456abcdef"
-        envkey_BASE_URL: ${{ secrets.BASE_URL }}
+        BASE_URL: ${{ secrets.BASE_URL }}
         envkey_VARIABLE: ${{ vars.BASE_URL }}
         some_other_variable: foobar
         directory: .
