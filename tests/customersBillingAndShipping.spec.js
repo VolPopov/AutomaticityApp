@@ -1,6 +1,7 @@
 import { test } from '../fixtures/basePage.js';
 import { INVALID_BILLING_INFO, INVALID_ID, INVALID_USER_CREDENTIALS, VALID_BILLING_INFO, VALID_SHIPPING_INFO } from '../fixtures/credentials.js';
-import { ERROR_MESSAGES, noID } from '../fixtures/messages.js';
+import { ERROR_MESSAGES } from '../fixtures/messages.js';
+import { noID } from '../generalFunctions/functions.js';
 
 test.describe("Customer API tests regarding billing and shipping info", () => {
 
@@ -82,11 +83,11 @@ test.describe("Customer API tests regarding billing and shipping info", () => {
     });
 
     test("Attempt to get shipping info of customer without a token", { tag: "@regression" }, async ({ customersAPI }) => {
-        await customersAPI.getShippingInfo({ token: "", statusCode: 401, error: ERROR_MESSAGES["UNAUTHENTICATED"] });
+        await customersAPI.getShippingInfo({ token: "", statusCode: 401, message: ERROR_MESSAGES["UNAUTHENTICATED"] });
     });
 
     test("Attempt to get shipping info of customer iwth invalid ID", { tag: "@regression" }, async ({ customersAPI }) => {
-        await customersAPI.getShippingInfo({ token: bearerToken, statusCode: 404, userID: INVALID_ID, error: noID(INVALID_ID) });
+        await customersAPI.getShippingInfo({ token: bearerToken, statusCode: 404, userID: INVALID_ID, message: noID(INVALID_ID) });
     });
 
     test("Attempt to get shipping info using invalid methods", { tag: "@regression" }, async ({ customersAPI }) => {

@@ -53,16 +53,4 @@ const ERROR_MESSAGES = {
     POSTAL_CODE_HI_LO: "The postal code field must not be lower than 4 and greater than 10 characters.", 
 };
 
-function noID (id) {
-    return `No customer found with ID ${id} found`;
-}
-
-function billingInfoMessage(id) {
-    return `Billing information for customer ID ${id}`;
-}
-
-function shippingInfoMessage(id) {
-    return `Shipping information for customer ID ${id}`;
-}
-
-export{ SUCCESS_MESSAGES, ERROR_MESSAGES, noID, billingInfoMessage, shippingInfoMessage };
+export{ SUCCESS_MESSAGES, ERROR_MESSAGES };

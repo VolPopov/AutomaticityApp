@@ -1,51 +1,7 @@
-const generateRandomString = length => {
-    const characters =
-      'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-    let result = '';
-    for (let i = 0; i < length; i++) {
-      const randomIndex = Math.floor(Math.random() * characters.length);
-      result += characters[randomIndex];
-    }
-    return result;
-  };
-
-  const generateRandomInt = length => {
-    const characters =
-      '123456789';
-    let result = '';
-    for (let i = 0; i < length; i++) {
-      const randomIndex = Math.floor(Math.random() * characters.length);
-      result += characters[randomIndex];
-    }
-    return result;
-  };
-
-  const generateRandomStringNoNumbers = length => {
-    const characters =
-      'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
-    let result = '';
-    for (let i = 0; i < length; i++) {
-      const randomIndex = Math.floor(Math.random() * characters.length);
-      result += characters[randomIndex];
-    }
-    return result;
-  };
-  
-  function getCardType() {
-    let card = ["Visa", "Mastercard", "Discover", "American Express"];
-    const randomIndex = Math.floor(Math.random() * 4);
-    return card[randomIndex];
-  }
-  
-  const generateUserCredentials = length => {
-    const baseString = generateRandomString(length);
-  
-    const username1 = baseString;
-    const email1 = `${baseString}@gmail.com`;
-    const password1 = `${baseString}123`;
-  
-    return { username1, email1, password1 };
-  };
+import { generateRandomInt } from "../generalFunctions/functions.js";
+import { generateRandomString } from "../generalFunctions/functions.js";
+import { generateRandomStringNoNumbers } from "../generalFunctions/functions.js";
+import { getCardType } from "../generalFunctions/functions.js";
 
 const VALID_USER_CREDENTIALS = {
     VALID_ID: 37, 
@@ -102,4 +58,4 @@ const VALID_SHIPPING_INFO = {
   COUNTRY: generateRandomStringNoNumbers(7), 
 }
 
-export { VALID_USER_CREDENTIALS, INVALID_USER_CREDENTIALS, generateUserCredentials, CUSTOMER_FOR_UPDATES, INVALID_ID, VALID_BILLING_INFO, INVALID_BILLING_INFO, VALID_SHIPPING_INFO }
+export { VALID_USER_CREDENTIALS, INVALID_USER_CREDENTIALS, CUSTOMER_FOR_UPDATES, INVALID_ID, VALID_BILLING_INFO, INVALID_BILLING_INFO, VALID_SHIPPING_INFO }

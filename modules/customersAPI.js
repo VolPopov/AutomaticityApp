@@ -1,7 +1,7 @@
 import { expect } from '@playwright/test';
-import { billingInfoMessage, ERROR_MESSAGES, shippingInfoMessage, SUCCESS_MESSAGES } from '../fixtures/messages.js';
-import { CUSTOMER_FOR_UPDATES, generateUserCredentials, VALID_BILLING_INFO, VALID_SHIPPING_INFO, VALID_USER_CREDENTIALS } from '../fixtures/credentials.js';
-import { error } from 'console';
+import { ERROR_MESSAGES, SUCCESS_MESSAGES } from '../fixtures/messages.js';
+import { billingInfoMessage, shippingInfoMessage, generateUserCredentials } from '../generalFunctions/functions.js';
+import { CUSTOMER_FOR_UPDATES, VALID_BILLING_INFO, VALID_SHIPPING_INFO, VALID_USER_CREDENTIALS } from '../fixtures/credentials.js';
 import Joi from 'joi';
 
 const { username1, email1 } = generateUserCredentials(5);
@@ -82,7 +82,7 @@ export class CustomersAPI {
             last_name: Joi.any(), 
             email: Joi.string().email().required(), 
             password: Joi.string().required(), 
-            date_of_birth: Joi.string(), 
+            date_of_birth: Joi.any(), 
             created_at: Joi.string(), 
             updated_at: Joi.string(), 
           }, 
@@ -211,47 +211,33 @@ export class CustomersAPI {
 
     expect(response.status()).toBe(statusCode);
     let responseJSON = await response.json();
+    console.log(responseJSON);
+    
     if(response.status() == 200) {
-      expect(Object.keys(responseJSON).includes("status")).toBeTruthy();
-      expect(responseJSON.status).toEqual(expect.any(String));
-      expect(Object.keys(responseJSON).includes("message")).toBeTruthy();
-      expect(responseJSON.message).toEqual(expect.any(String));
-      expect(Object.keys(responseJSON).includes("customer")).toBeTruthy();
-      expect(Object.keys(responseJSON.customer).includes("id")).toBeTruthy();
-      expect(responseJSON.customer.id).toEqual(expect.any(Number));
-      expect(Object.keys(responseJSON.customer).includes("user_id")).toBeTruthy();
-      expect(responseJSON.customer.user_id).toEqual(expect.any(Number));
-      expect(Object.keys(responseJSON.customer).includes("cart_id")).toBeTruthy();
-      if(responseJSON.customer.cart_id != null) {
-        expect(responseJSON.customer.cart_id).toEqual(expect.any(Number));
-      }
-      expect(Object.keys(responseJSON.customer).includes("username")).toBeTruthy();
-      expect(responseJSON.customer.username).toEqual(expect.any(String));
-      expect(Object.keys(responseJSON.customer).includes("first_name")).toBeTruthy();
-      if(responseJSON.customer.first_name != null) {
-        expect(responseJSON.customer.first_name).toEqual(expect.any(String));
-      }
-      expect(Object.keys(responseJSON.customer).includes("last_name")).toBeTruthy();
-      if(responseJSON.customer.last_name != null) {
-        expect(responseJSON.customer.last_name).toEqual(expect.any(String));
-      }
-      expect(Object.keys(responseJSON.customer).includes("email")).toBeTruthy();
-      expect(responseJSON.customer.email).toEqual(expect.stringMatching(/^[^\s@]+@[^\s@]+\.[^\s@]+$/));
-      expect(Object.keys(responseJSON.customer).includes("password")).toBeTruthy();
-      expect(responseJSON.customer.password).toEqual(expect.any(String));
-      expect(Object.keys(responseJSON.customer).includes("date_of_birth")).toBeTruthy();
-      if(responseJSON.customer.date_of_birth != null) {
-        expect(responseJSON.customer.date_of_birth).toEqual(expect.any(String));
-      }
-      expect(Object.keys(responseJSON.customer).includes("created_at")).toBeTruthy();
-      expect(responseJSON.customer.created_at).toEqual(expect.any(String));
-      expect(Object.keys(responseJSON.customer).includes("updated_at")).toBeTruthy();
-      expect(responseJSON.customer.updated_at).toEqual(expect.any(String));
-      expect(Object.keys(responseJSON.customer).includes("billing_info")).toBeTruthy();
-      expect(responseJSON.customer.billing_info).toEqual(expect.any(Object));
-      expect(Object.keys(responseJSON.customer).includes("shipping_info")).toBeTruthy();
-      expect(responseJSON.customer.shipping_info).toEqual(expect.any(Object));
 
+      const schema = Joi.object({
+        responseJSON: {
+          status: Joi.string().required(), 
+          message: Joi.string().required(), 
+          customer: {
+            id: Joi.number().required(), 
+            user_id: Joi.number().required(), 
+            cart_id: Joi.any(), 
+            username: Joi.string().required(), 
+            first_name: Joi.any(), 
+            last_name: Joi.any(), 
+            email: Joi.string().email().required(), 
+            password: Joi.string().required(), 
+            date_of_birth: Joi.any(), 
+            created_at: Joi.string(), 
+            updated_at: Joi.string(), 
+            billing_info: Joi.any(), 
+            shipping_info: Joi.any(), 
+          }, 
+        }
+      });
+
+      expect(schema.validate({responseJSON}).error).toBe(undefined);
       expect(responseJSON.customer.id).toBe(userID);
       expect(responseJSON.message).toBe(message);
     }

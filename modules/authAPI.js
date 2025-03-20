@@ -1,5 +1,6 @@
 import { expect } from '@playwright/test';
-import { VALID_USER_CREDENTIALS, generateUserCredentials } from "../fixtures/credentials";
+import { VALID_USER_CREDENTIALS } from "../fixtures/credentials";
+import { generateUserCredentials } from '../generalFunctions/functions.js';
 import { ERROR_MESSAGES, SUCCESS_MESSAGES } from '../fixtures/messages.js';
 
 const { username1, email1, password1 } = generateUserCredentials(5);

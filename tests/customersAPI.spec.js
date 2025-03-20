@@ -1,6 +1,7 @@
 import { test } from '../fixtures/basePage.js';
 import { INVALID_ID, INVALID_USER_CREDENTIALS, VALID_USER_CREDENTIALS } from '../fixtures/credentials.js';
-import { ERROR_MESSAGES, noID } from '../fixtures/messages.js';
+import { ERROR_MESSAGES } from '../fixtures/messages.js';
+import { noID } from '../generalFunctions/functions.js';
 
 test.describe("Customer API tests", () => {
 
@@ -79,7 +80,7 @@ test.describe("Customer API tests", () => {
     });
 
     test("Get information of specific customer", { tag: "@smoke" }, async ({ customersAPI }) => {
-        await customersAPI.getSpecificCustomer({ token: bearerToken, userID: 3 })
+        await customersAPI.getSpecificCustomer({ token: bearerToken })
     });
 
     test("Update customer information", { tag: "@smoke" }, async ({ customersAPI }) => {
