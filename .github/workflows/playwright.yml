@@ -5,16 +5,23 @@ on:
   pull_request:
     branches: [ main, master ]
 jobs:
-  using-github-secrets:
-        runs-on: ubuntu-latest
-        steps:
-            - name: Checkout repository
-              uses: actions/checkout@v3
-
-            - name: Create .env file
-              run: |
-                  touch .env
-                  echo "BASE_URL = ${{vars.BASE_URL}}" >> .env
+  create-envfile:
+ 
+    runs-on: ubuntu-latest
+ 
+    steps:
+    - name: Make envfile
+      uses: SpicyPizza/create-envfile@v2.0
+      with:
+        envkey_DEBUG: false
+        envkey_SOME_API_KEY: "123456abcdef"
+        envkey_SECRET_KEY: ${{ secrets.BASE_URL }}
+        envkey_BASE_URL: ${{ vars.BASE_URL }}
+        some_other_variable: foobar
+        directory:
+        file_name: .env
+        fail_on_empty: false
+        sort_keys: false
                   
   test:
     timeout-minutes: 60
