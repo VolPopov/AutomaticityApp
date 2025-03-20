@@ -129,7 +129,7 @@ export class CustomersAPI {
 
   async updateCustomer({
     token, 
-    userID = CUSTOMER_FOR_UPDATES["ID"], 
+    userID = CUSTOMER_FOR_UPDATES, 
     statusCode = 200, 
     message = SUCCESS_MESSAGES["BASIC_SUCCESS_MESSAGE"], 
     username = username1, 

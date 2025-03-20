@@ -1,7 +1,4 @@
-import { generateRandomInt } from "../generalFunctions/functions.js";
-import { generateRandomString } from "../generalFunctions/functions.js";
-import { generateRandomStringNoNumbers } from "../generalFunctions/functions.js";
-import { getCardType } from "../generalFunctions/functions.js";
+import { generateRandomInt, generateRandomString, generateRandomStringNoNumbers, getCardType } from "../generalFunctions/functions.js";
 
 const VALID_USER_CREDENTIALS = {
     VALID_ID: 37, 
@@ -10,9 +7,7 @@ const VALID_USER_CREDENTIALS = {
     VALID_PASSWORD: "pass123",
 };
 
-const CUSTOMER_FOR_UPDATES = {
-  ID: 119, 
-}
+const CUSTOMER_FOR_UPDATES = 119;
 
 const INVALID_ID = 23;
 
