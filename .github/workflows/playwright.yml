@@ -5,20 +5,6 @@ on:
   pull_request:
     branches: [ main, master ]
 jobs:
-#   using-github-secrets:
-#         runs-on: ubuntu-latest
-#         steps:
-#             - name: Checkout repository
-#               uses: actions/checkout@v3
-
-#             - name: Create .env file
-#               run: |
-#                   touch .env
-#                   echo BASE_URL="${{vars.BASE_URL}}">> .env
-
-#             - name: Test printing your secret (Remove this step in production)
-#               run: |
-#                   cat .env
   test:
     env:
         BASE_URL: ${{ vars.BASE_URL }}
