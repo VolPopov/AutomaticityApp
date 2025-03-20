@@ -18,7 +18,7 @@ jobs:
         envkey_BASE_URL: ${{ secrets.BASE_URL }}
         envkey_VARIABLE: ${{ vars.BASE_URL }}
         some_other_variable: foobar
-        directory: <directory_name>
+        directory: .
         file_name: .env
         fail_on_empty: false
         sort_keys: false
