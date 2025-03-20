@@ -59,4 +59,12 @@ const generateRandomString = length => {
     return `Shipping information for customer ID ${id}`;
 }
 
-export { generateRandomString, generateRandomStringNoNumbers, generateRandomInt, getCardType, noID, billingInfoMessage, shippingInfoMessage, generateUserCredentials }
+   function authEndpoint() {
+    return "/api/v1/auth";
+   }
+
+   function customersEndpoint() {
+     return "/api/v1/customers";
+   }
+
+export { generateRandomString, generateRandomStringNoNumbers, generateRandomInt, getCardType, noID, billingInfoMessage, shippingInfoMessage, generateUserCredentials, authEndpoint, customersEndpoint }

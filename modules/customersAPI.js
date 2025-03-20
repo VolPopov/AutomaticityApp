@@ -1,6 +1,6 @@
 import { expect } from '@playwright/test';
 import { ERROR_MESSAGES, SUCCESS_MESSAGES } from '../fixtures/messages.js';
-import { billingInfoMessage, shippingInfoMessage, generateUserCredentials } from '../generalFunctions/functions.js';
+import { billingInfoMessage, shippingInfoMessage, generateUserCredentials, customersEndpoint } from '../generalFunctions/functions.js';
 import { CUSTOMER_FOR_UPDATES, VALID_BILLING_INFO, VALID_SHIPPING_INFO, VALID_USER_CREDENTIALS } from '../fixtures/credentials.js';
 import Joi from 'joi';
 
@@ -9,7 +9,6 @@ const { username1, email1 } = generateUserCredentials(5);
 export class CustomersAPI {
     constructor(page) {
         this.page = page;
-        this.endpoint = "/api/v1/customers";
       }
   
       getAcceptHeader() {
@@ -26,7 +25,7 @@ export class CustomersAPI {
     message = SUCCESS_MESSAGES["BASIC_SUCCESS_MESSAGE"], 
     method = "get"
   }) {
-    let response = await this.page.request[method](`${this.endpoint}`, {
+    let response = await this.page.request[method](`${customersEndpoint()}`, {
       headers: { Accept: this.getAcceptHeader(), Authorization: this.getAuthorizationHeader(token) }, 
     });
 
@@ -60,14 +59,12 @@ export class CustomersAPI {
     statusCode = 200, 
     message = SUCCESS_MESSAGES["BASIC_SUCCESS_MESSAGE"], 
   }) {
-    let response = await this.page.request.get(`${this.endpoint}/${userID}`, {
+    let response = await this.page.request.get(`${customersEndpoint()}/${userID}`, {
       headers: { Accept: this.getAcceptHeader(), Authorization: this.getAuthorizationHeader(token) }, 
     });
 
     expect(response.status()).toBe(statusCode);
     let responseJSON = await response.json();
-    console.log(responseJSON);
-    
 
     if(statusCode == 200) {
       const schema = Joi.object({
@@ -88,9 +85,7 @@ export class CustomersAPI {
           }, 
         }
       });
-      console.log(schema.validate({responseJSON}));
       expect(schema.validate({responseJSON}).error).toBe(undefined);
-      
       expect(responseJSON.customer.id).toBe(userID);
     }
 
@@ -141,7 +136,7 @@ export class CustomersAPI {
     email = email1, 
     password = VALID_USER_CREDENTIALS["VALID_PASSWORD"], 
   }) {
-    let response = await this.page.request.put(`${this.endpoint}/${userID}`, {
+    let response = await this.page.request.put(`${customersEndpoint()}/${userID}`, {
     data: { username: username, email: email, password: password }, 
     headers: { Accept: this.getAcceptHeader(), Authorization: this.getAuthorizationHeader(token) }, 
     });
@@ -205,13 +200,12 @@ export class CustomersAPI {
     token, 
     message = SUCCESS_MESSAGES["CUSTOMER_DELETED"], 
   }) {
-    let response = await this.page.request.delete(`${this.endpoint}/${userID}`, {
+    let response = await this.page.request.delete(`${customersEndpoint()}/${userID}`, {
       headers: { Accept: this.getAcceptHeader(), Authorization: this.getAuthorizationHeader(token) },
     });
 
     expect(response.status()).toBe(statusCode);
     let responseJSON = await response.json();
-    console.log(responseJSON);
     
     if(response.status() == 200) {
 
@@ -282,7 +276,7 @@ export class CustomersAPI {
     message = billingInfoMessage(userID), 
     method = "get"
   }) {
-    let response = await this.page.request[method](`${this.endpoint}/${userID}/billing-info`, {
+    let response = await this.page.request[method](`${customersEndpoint()}/${userID}/billing-info`, {
       headers: { Accept: this.getAcceptHeader(), Authorization: this.getAuthorizationHeader(token) },
     });
     let responseJSON = await response.json();
@@ -346,7 +340,7 @@ export class CustomersAPI {
     cvv_error = ERROR_MESSAGES["NO_CVV"], 
     card_expiration_date_error = ERROR_MESSAGES["NO_CARD_EXPIRATION_DATE"], 
   }) {
-    let response = await this.page.request.put(`${this.endpoint}/${userID}/billing-info`, { 
+    let response = await this.page.request.put(`${customersEndpoint()}/${userID}/billing-info`, { 
       data: { cardholder: cardholder, card_type: card_type, card_number: card_number, cvv: cvv, card_expiration_date: card_expiration_date }, 
       headers: { Accept: this.getAcceptHeader(), Authorization: this.getAuthorizationHeader(token) }, 
     });
@@ -427,7 +421,7 @@ export class CustomersAPI {
     message = shippingInfoMessage(userID), 
     method = "get"
   }) {
-    let response = await this.page.request[method](`${this.endpoint}/${userID}/shipping-info`, {  
+    let response = await this.page.request[method](`${customersEndpoint()}/${userID}/shipping-info`, {  
       headers: { Accept: this.getAcceptHeader(), Authorization: this.getAuthorizationHeader(token) }, 
     });
     let responseJSON = await response.json();
@@ -496,7 +490,7 @@ export class CustomersAPI {
     postal_code_error = ERROR_MESSAGES["NO_POSTAL_CODE"], 
     country_error = ERROR_MESSAGES["NO_COUNTRY"], 
   }) {
-    let response = await this.page.request.put(`${this.endpoint}/${userID}/shipping-info`, { 
+    let response = await this.page.request.put(`${customersEndpoint()}/${userID}/shipping-info`, { 
       data: { first_name: first_name, last_name: last_name, email: email, street_and_number: street_and_number, phone_number: phone_number, city: city, postal_code: postal_code, country: country }, 
       headers: { Accept: this.getAcceptHeader(), Authorization: this.getAuthorizationHeader(token) }, 
     });

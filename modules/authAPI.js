@@ -1,6 +1,6 @@
 import { expect } from '@playwright/test';
 import { VALID_USER_CREDENTIALS } from "../fixtures/credentials";
-import { generateUserCredentials } from '../generalFunctions/functions.js';
+import { generateUserCredentials, authEndpoint } from '../generalFunctions/functions.js';
 import { ERROR_MESSAGES, SUCCESS_MESSAGES } from '../fixtures/messages.js';
 
 const { username1, email1, password1 } = generateUserCredentials(5);
@@ -8,7 +8,6 @@ const { username1, email1, password1 } = generateUserCredentials(5);
 export class AuthAPI {
     constructor(page) {
       this.page = page;
-      this.endpoint = "/api/v1/auth";
     }
 
     getAcceptHeader() {
@@ -28,7 +27,7 @@ export class AuthAPI {
       error,
       method = "post", 
     }) {
-      let response = await this.page.request[method](`${this.endpoint}/login`, {
+      let response = await this.page.request[method](`${authEndpoint()}/login`, {
         data: { email: email, password: password,},
         headers: { Accept: this.getAcceptHeader() }, 
       });
@@ -85,7 +84,7 @@ export class AuthAPI {
         message = SUCCESS_MESSAGES["USER_CREATED_SUCCESSFULLY"], 
         method = "post"
       }) {
-        let response = await this.page.request[method](`${this.endpoint}/register`, {
+        let response = await this.page.request[method](`${authEndpoint()}/register`, {
           data: { username: username, email: email, password: password },
           headers: { Accept: this.getAcceptHeader() },
         });
@@ -143,7 +142,7 @@ export class AuthAPI {
       statusCode = 200,
       message = SUCCESS_MESSAGES["USER_LOGGED_OUT"],
     }) {
-      let response = await this.page.request.post(`${this.endpoint}/logout`, {
+      let response = await this.page.request.post(`${authEndpoint()}/logout`, {
         headers: { Accept: this.getAcceptHeader(), Authorization: this.getAuthorizationHeader(token) }, 
       });
 
@@ -169,7 +168,7 @@ export class AuthAPI {
       username, 
       email, 
     }) {
-      let response = await this.page.request.post(`${this.endpoint}/profile`, {
+      let response = await this.page.request.post(`${authEndpoint()}/profile`, {
         headers: { Accept: this.getAcceptHeader(), Authorization: this.getAuthorizationHeader(token) }, 
       });
 
@@ -201,7 +200,7 @@ export class AuthAPI {
       token, 
       message, 
     }) {
-      let response = await this.page.request.post(`${this.endpoint}/refresh`, {
+      let response = await this.page.request.post(`${authEndpoint()}/refresh`, {
         headers: { Accept: this.getAcceptHeader(), Authorization: this.getAuthorizationHeader(token) }, 
       });
 
