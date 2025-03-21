@@ -67,4 +67,6 @@ const generateRandomString = length => {
      return "/api/v1/customers";
    }
 
+   
+
 export { generateRandomString, generateRandomStringNoNumbers, generateRandomInt, getCardType, noID, billingInfoMessage, shippingInfoMessage, generateUserCredentials, authEndpoint, customersEndpoint }
