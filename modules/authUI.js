@@ -22,6 +22,7 @@ export class AuthUI {
         password = VALID_USER_CREDENTIALS["VALID_PASSWORD"], 
         statusCode = 200, 
         message, 
+        error, 
       }) {
         expect(this.email).toBeEditable();
         await this.email.fill(email);
@@ -42,7 +43,7 @@ export class AuthUI {
           expect(responseJSON).toEqual({
             error: expect.any(String), 
           });
-          expect(responseJSON.error).toBe(ERROR_MESSAGES["UNAUTHORIZED"]);
+          expect(responseJSON.error).toBe(error);
           await expect(this.page).toHaveURL(URLS["LOGIN_PAGE"]);
           await expect(this.h1Banner).toBeVisible();
           await expect(this.loginErrorMessage).toBeVisible();
@@ -127,7 +128,8 @@ export class AuthUI {
             expect(this.loginErrorMessage).toBeVisible();
             expect(this.loginErrorMessage).toContainText(message);
           }
-          
+       //   window.localStorage.setItem(key, value);
+
         }
       }
 }
