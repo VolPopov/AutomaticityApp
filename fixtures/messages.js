@@ -51,6 +51,7 @@ const ERROR_MESSAGES = {
     FIRST_NAME_INVALID: "The first name field format is invalid.", 
     POSTAL_CODE_STRING: "The postal code field must be an integer.", 
     POSTAL_CODE_HI_LO: "The postal code field must not be lower than 4 and greater than 10 characters.", 
+    EMAIL_OR_PASS_INVALID: "The email address or password you entered is invalid", 
 };
 
 export{ SUCCESS_MESSAGES, ERROR_MESSAGES };
