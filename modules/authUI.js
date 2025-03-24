@@ -24,6 +24,8 @@ export class AuthUI {
         this.button = this.headerAfterLogin.locator('button');
         this.cartButton = this.button.nth(0);
         this.logoutButton = this.button.nth(1);
+        this.logoutDropdown = page.locator("div[class='rounded-md ring-1 ring-black ring-opacity-5 py-1 bg-white']");
+        this.logoutDropdownButton = this.logoutDropdown.locator("button");
       }
     
       async login({
@@ -101,6 +103,7 @@ export class AuthUI {
           await expect(this.page).toHaveURL(URLS["DASHBOARD"]);
           await expect(this.cartButton).toBeEnabled();
           await expect(this.logoutButton).toBeEnabled();
+          await expect(this.page).toHaveScreenshot();
         }
 
         if(response.status() != 200) {
@@ -131,4 +134,27 @@ export class AuthUI {
       }
         return responseJSON;
       }
+
+      async logout({
+        email = VALID_USER_CREDENTIALS["VALID_EMAIL"], 
+        password = VALID_USER_CREDENTIALS["VALID_PASSWORD"],  
+      }) {
+        expect(this.headerBeforeLogin).toBeVisible();
+        expect(this.h1Banner).toBeVisible();
+        expect(this.h1Banner).toContainText("Welcome Back! 👋🏻");
+        expect(this.email).toBeEditable();
+        await this.email.fill(email);
+        expect(this.password).toBeEditable();
+        await this.password.fill(password);
+        expect(this.submitButton).toBeEnabled();
+        await this.submitButton.click();
+        await expect(this.page).toHaveURL(URLS["DASHBOARD"]);
+        await expect(this.headerAfterLogin).toBeVisible();
+        expect(this.logoutButton).toBeEnabled();
+        await this.logoutButton.click();
+        expect(this.logoutDropdown).toBeVisible();
+        expect(this.logoutDropdownButton).toBeVisible();
+        await this.logoutDropdownButton.click();
+        await expect(this.page).toHaveURL("/");
+      };
 }

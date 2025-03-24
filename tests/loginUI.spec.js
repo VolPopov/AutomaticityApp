@@ -32,4 +32,8 @@ test.describe('Login tests', () => {
   test("Log in", { tag: "@smoke" }, async ({ authUI }) => {
     await authUI.login({});
   });
+
+  test("Logout", { tag: "@smoke" }, async ({ authUI }) => {
+    await authUI.logout({});
+  });
 });
