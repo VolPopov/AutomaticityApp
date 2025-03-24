@@ -15,6 +15,9 @@ export class AuthUI {
         this.submitButton = page.locator('button');
         this.h1Banner = page.locator('h1');
         this.loginErrorMessage = page.locator('p');
+        this.headerBeforeLogin = page.locator(
+          "div[class='max-w-full sticky z-20 top-0 overscroll-none']"
+        );
         this.headerAfterLogin = page.locator(
           "div[class='flex w-32 h-12 align-items-center']"
         );
@@ -28,6 +31,7 @@ export class AuthUI {
         password = VALID_USER_CREDENTIALS["VALID_PASSWORD"], 
         message,  
       }) {
+        expect(this.headerBeforeLogin).toBeVisible();
         expect(this.h1Banner).toBeVisible();
         expect(this.h1Banner).toContainText("Welcome Back! 👋🏻");
         expect(this.email).toBeEditable();
@@ -41,8 +45,10 @@ export class AuthUI {
 
         if (response.status() == 200) {     
         await expect(this.page).toHaveURL(URLS["DASHBOARD"]);
+        await expect(this.headerAfterLogin).toBeVisible();
         await expect(this.cartButton).toBeEnabled();
         await expect(this.logoutButton).toBeEnabled();
+        await expect(this.page).toHaveScreenshot();
         }
 
         if(response.status() != 200) {     
