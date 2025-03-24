@@ -2,8 +2,25 @@ import { test } from "../fixtures/basePage.js";
 import { URLS } from "../fixtures/urls.js";
 import { ERROR_MESSAGES } from "../fixtures/messages.js";
 import { INVALID_USER_CREDENTIALS, VALID_USER_CREDENTIALS } from "../fixtures/credentials.js";
+import { CustomersAPI } from "../modules/customersAPI.js";
 
 test.describe('Register tests', () => {
+
+  let userID;
+  let bearerToken;
+  let page;
+
+  test.beforeAll("Make page", async({ browser }) => {
+    page = await browser.newPage();
+  });
+
+  test.afterAll("Delete new users", async ({}) => {
+     const customerAPI = new CustomersAPI(page);
+     if (userID != null && bearerToken != null) {
+     await customerAPI.delete({ userID: userID, token: bearerToken });
+     }
+    await page.close();
+  })
 
   test.beforeEach('Visit the login page', async ({ page }) => {
     await page.goto(URLS["REGISTER_PAGE"]);
@@ -58,6 +75,8 @@ test.describe('Register tests', () => {
   });
 
   test("Register", { tag: "@smoke" }, async ({ authUI }) => {
-    await authUI.register({});
+    const response = await authUI.register({});
+    userID = response.user.id;
+    bearerToken = response.auth.token;
   });
 });

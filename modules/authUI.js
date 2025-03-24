@@ -93,16 +93,17 @@ export class AuthUI {
         await this.submitButton.click();
         const response = await responsePromise;
         expect(response.status()).toBe(statusCode);
+        let responseJSON;
 
         if (response.status() == 200) {
-          let responseJSON = await response.json();
+          responseJSON = await response.json();
           console.log(responseJSON);
           
           await expect(this.page).toHaveURL(URLS["DASHBOARD"]);
         }
 
         if(response.status() == 422) {
-          let responseJSON = await response.json();
+          responseJSON = await response.json();
           console.log(responseJSON);
           expect(responseJSON).toEqual({
             message: expect.any(String), 
@@ -129,5 +130,6 @@ export class AuthUI {
             expect(this.loginErrorMessage).toContainText(message);
           }
         }
+        return responseJSON;
       }
 }

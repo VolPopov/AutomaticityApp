@@ -225,7 +225,7 @@ export class AuthAPI {
     }
 
     async checkIfTokenIsExpired(token) {
-      let response = await this.page.request.post(`${authEndpoint()}/logout`, {
+      let response = await this.page.request.get(`/api/v1/customers`, {
         headers: { Accept: this.getAcceptHeader(), Authorization: this.getAuthorizationHeader(token) }, 
       });
 
@@ -235,13 +235,8 @@ export class AuthAPI {
          return false;
         }
 
-        if(response.status() == 500) {
-          if (responseJSON.message == ERROR_MESSAGES["EXPIRED_TOKEN"]) {
-            return true;
-          }
-          else {
-            return false;
-          }
+        if(response.status() == 401) {
+          return false
         }
     }
 }
