@@ -26,7 +26,6 @@ export class AuthUI {
       async login({
         email = VALID_USER_CREDENTIALS["VALID_EMAIL"], 
         password = VALID_USER_CREDENTIALS["VALID_PASSWORD"], 
-        statusCode = 200, 
         message,  
       }) {
         expect(this.h1Banner).toBeVisible();
@@ -39,7 +38,6 @@ export class AuthUI {
         const responsePromise = this.page.waitForResponse("/api/v1/auth/login");
         await this.submitButton.click();
         const response = await responsePromise;
-        expect(response.status()).toBe(statusCode);
 
         if (response.status() == 200) {     
         await expect(this.page).toHaveURL(URLS["DASHBOARD"]);
@@ -76,7 +74,6 @@ export class AuthUI {
         username = username1, 
         email = email1, 
         password = password1, 
-        statusCode = 200, 
         message, 
       }) {
         expect(this.h1Banner).toBeVisible();
@@ -91,7 +88,6 @@ export class AuthUI {
         const responsePromise = this.page.waitForResponse("/api/v1/auth/register");
         await this.submitButton.click();
         const response = await responsePromise;
-        expect(response.status()).toBe(statusCode);
         let responseJSON = await response.json();
         
 

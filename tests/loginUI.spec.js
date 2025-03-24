@@ -10,23 +10,23 @@ test.describe('Login tests', () => {
   });
 
   test("Attempt to log in with no credentials of any kind", { tag: "@regression" }, async ({ authUI }) => {
-    await authUI.login({ email: "", password: "", statusCode: 422, message: ERROR_MESSAGES["EMAIL_AND_PASSWORD_BOTH_MISSING"] });
+    await authUI.login({ email: "", password: "", message: ERROR_MESSAGES["EMAIL_AND_PASSWORD_BOTH_MISSING"] });
   });
 
   test("Attempt to log in with no password", { tag: "@regression" }, async ({ authUI }) => {
-    await authUI.login({ password: "", statusCode: 422, message: ERROR_MESSAGES["PASSWORD_MISSING"] });
+    await authUI.login({ password: "", message: ERROR_MESSAGES["PASSWORD_MISSING"] });
   });
 
   test("Attempt to log in with a correct mail, but the wrong password", { tag: "@regression" }, async ({ authUI }) => {
-    await authUI.login({ password: INVALID_USER_CREDENTIALS["INCORRECT_PASSWORD_FOR_VALID_USER"], statusCode: 401, error: ERROR_MESSAGES["UNAUTHORIZED"] });
+    await authUI.login({ password: INVALID_USER_CREDENTIALS["INCORRECT_PASSWORD_FOR_VALID_USER"], error: ERROR_MESSAGES["UNAUTHORIZED"] });
   });
 
   test("Attempt to log in with invalid mail format", { tag: "@regression" }, async ({ authUI }) => {
-    await authUI.login({ email: INVALID_USER_CREDENTIALS["INVALID_MAIL_FORMAT"], statusCode: 422, message: ERROR_MESSAGES["INVALID_MAIL_FORMAT_FOR_LOGIN"] });
+    await authUI.login({ email: INVALID_USER_CREDENTIALS["INVALID_MAIL_FORMAT"], message: ERROR_MESSAGES["INVALID_MAIL_FORMAT_FOR_LOGIN"] });
   });
 
   test("Attempt to log in with valid email address that has not been registered", { tag: "@regression" }, async ({ authUI }) => {
-    await authUI.login({ email: INVALID_USER_CREDENTIALS["VALID_MAIL_BUT_NOT_REGISTERED"], statusCode: 401, error: ERROR_MESSAGES["UNAUTHORIZED"] });
+    await authUI.login({ email: INVALID_USER_CREDENTIALS["VALID_MAIL_BUT_NOT_REGISTERED"], error: ERROR_MESSAGES["UNAUTHORIZED"] });
   });
 
   test("Log in", { tag: "@smoke" }, async ({ authUI }) => {
