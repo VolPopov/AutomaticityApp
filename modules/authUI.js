@@ -135,20 +135,7 @@ export class AuthUI {
         return responseJSON;
       }
 
-      async logout({
-        email = VALID_USER_CREDENTIALS["VALID_EMAIL"], 
-        password = VALID_USER_CREDENTIALS["VALID_PASSWORD"],  
-      }) {
-        expect(this.headerBeforeLogin).toBeVisible();
-        expect(this.h1Banner).toBeVisible();
-        expect(this.h1Banner).toContainText("Welcome Back! 👋🏻");
-        expect(this.email).toBeEditable();
-        await this.email.fill(email);
-        expect(this.password).toBeEditable();
-        await this.password.fill(password);
-        expect(this.submitButton).toBeEnabled();
-        await this.submitButton.click();
-        await expect(this.page).toHaveURL(URLS["DASHBOARD"]);
+      async logout({}) {
         await expect(this.headerAfterLogin).toBeVisible();
         expect(this.logoutButton).toBeEnabled();
         await this.logoutButton.click();
