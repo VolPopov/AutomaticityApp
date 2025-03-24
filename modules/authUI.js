@@ -33,7 +33,7 @@ export class AuthUI {
         await this.submitButton.click();
         const response = await responsePromise;
         expect(response.status()).toBe(statusCode);
-        if (response.status() == 200) { 
+        if (response.status() == 200) {     
         await expect(this.page).toHaveURL(URLS["DASHBOARD"]);
         }
 
@@ -128,8 +128,6 @@ export class AuthUI {
             expect(this.loginErrorMessage).toBeVisible();
             expect(this.loginErrorMessage).toContainText(message);
           }
-       //   window.localStorage.setItem(key, value);
-
         }
       }
 }
