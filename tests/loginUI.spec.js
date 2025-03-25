@@ -30,11 +30,11 @@ test.describe('Login tests', () => {
   });
 
   test("Log in", { tag: "@smoke" }, async ({ authUI }) => {
-    await authUI.login({});
+    await authUI.login({ valid: true });
   });
 
   test("Logout", { tag: "@smoke" }, async ({ authUI }) => {
-    await authUI.login({});
+    await authUI.login({ valid: true });
     await authUI.logout({});
   });
 });

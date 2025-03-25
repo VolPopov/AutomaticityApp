@@ -26,12 +26,14 @@ export class AuthUI {
         this.logoutButton = this.button.nth(1);
         this.logoutDropdown = page.locator("div[class='rounded-md ring-1 ring-black ring-opacity-5 py-1 bg-white']");
         this.logoutDropdownButton = this.logoutDropdown.locator("button");
+        this.searchBar = page.locator("#search");
       }
     
       async login({
         email = VALID_USER_CREDENTIALS["VALID_EMAIL"], 
         password = VALID_USER_CREDENTIALS["VALID_PASSWORD"], 
         message,  
+        valid = false, 
       }) {
         expect(this.headerBeforeLogin).toBeVisible();
         expect(this.h1Banner).toBeVisible();
@@ -45,15 +47,18 @@ export class AuthUI {
         await this.submitButton.click();
         const response = await responsePromise;
 
-        if (response.status() == 200) {     
+        if (valid == true) {     
+        expect(response.status()).toBe(200);  
         await expect(this.page).toHaveURL(URLS["DASHBOARD"]);
         await expect(this.headerAfterLogin).toBeVisible();
         await expect(this.cartButton).toBeEnabled();
         await expect(this.logoutButton).toBeEnabled();
+        await expect(this.searchBar).toBeVisible();
         await expect(this.page).toHaveScreenshot();
         }
 
-        if(response.status() != 200) {     
+        if(valid == false) {     
+          expect(response.status()).not.toBe(200);
           let responseJSON = await response.json();   
           await expect(this.page).toHaveURL(URLS["LOGIN_PAGE"]);
           await expect(this.h1Banner).toBeVisible();
@@ -83,6 +88,7 @@ export class AuthUI {
         email = email1, 
         password = password1, 
         message, 
+        valid = false, 
       }) {
         expect(this.h1Banner).toBeVisible();
         expect(this.h1Banner).toContainText("Register!");
@@ -99,17 +105,21 @@ export class AuthUI {
         let responseJSON = await response.json();
         
 
-        if (response.status() == 200) {
+        if (valid == true) {
+          expect(response.status()).toBe(200);
           await expect(this.page).toHaveURL(URLS["DASHBOARD"]);
           await expect(this.cartButton).toBeEnabled();
           await expect(this.logoutButton).toBeEnabled();
+          await expect(this.searchBar).toBeVisible();
           await expect(this.page).toHaveScreenshot();
         }
 
-        if(response.status() != 200) {
+        if(valid == false) {
           responseJSON = await response.json();
-          expect(this.page).toHaveURL(URLS["REGISTER_PAGE"]);
-          expect(this.h1Banner).toBeVisible();
+          expect(response.status()).not.toBe(200);
+          await expect(this.page).toHaveURL(URLS["REGISTER_PAGE"]);
+          await expect(this.h1Banner).toBeVisible();
+          await expect(this.searchBar).not.toBeVisible();
 
           if(response.status() == 422) {
                    

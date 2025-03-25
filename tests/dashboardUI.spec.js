@@ -12,7 +12,7 @@ test.describe("Dasboard tests", () => {
         page = await browser.newPage();
         authUI = new AuthUI(page);
         await page.goto(URLS["LOGIN_PAGE"]);
-        await authUI.login({});
+        await authUI.login({ valid: true });
     });
 
     test.afterAll("Close page", async ({}) => {

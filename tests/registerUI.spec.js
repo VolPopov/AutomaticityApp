@@ -75,7 +75,7 @@ test.describe('Register tests', () => {
   });
 
   test("Register", { tag: "@smoke" }, async ({ authUI }) => {
-    const response = await authUI.register({});
+    const response = await authUI.register({ valid: true });
     userID = response.user.id;
     bearerToken = response.auth.token;
   });
