@@ -116,10 +116,10 @@ export class AuthUI {
 
         if(valid == false) {
           responseJSON = await response.json();
-          expect(response.status()).not.toBe(200);
           await expect(this.page).toHaveURL(URLS["REGISTER_PAGE"]);
           await expect(this.h1Banner).toBeVisible();
           await expect(this.searchBar).not.toBeVisible();
+          expect(response.status()).not.toBe(200);
 
           if(response.status() == 422) {
                    

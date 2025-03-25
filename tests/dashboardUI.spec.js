@@ -19,7 +19,7 @@ test.describe("Dasboard tests", () => {
         await page.close();
     });
      
-    test("Generic test 2", { tag: "@smoke" }, async({}) => {
+    test("Add a product to cart", { tag: "@smoke" }, async({}) => {
         await page.goto(URLS["PROFILE"]);
         await expect(page).toHaveURL(URLS["PROFILE"]);
     });
