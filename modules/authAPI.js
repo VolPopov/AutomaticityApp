@@ -5,6 +5,7 @@ import { ERROR_MESSAGES, SUCCESS_MESSAGES } from '../fixtures/messages.js';
 
 const { username1, email1, password1 } = generateUserCredentials(5);
 
+
 export class AuthAPI {
     constructor(page) {
       this.page = page;
@@ -149,6 +150,8 @@ export class AuthAPI {
       expect(response.status()).toBe(statusCode);
 
        let responseJSON = await response.json();
+       console.log(responseJSON);
+       
        
         if(response.status() == 200) {
          expect(responseJSON).toEqual({
@@ -219,5 +222,21 @@ export class AuthAPI {
         expect(responseJSON.message).toBe(message);
       }
       return responseJSON;
+    }
+
+    async checkIfTokenIsExpired(token) {
+      let response = await this.page.request.get(`/api/v1/customers`, {
+        headers: { Accept: this.getAcceptHeader(), Authorization: this.getAuthorizationHeader(token) }, 
+      });
+
+       let responseJSON = await response.json();
+       
+        if(response.status() == 200) {
+         return false;
+        }
+
+        if(response.status() == 401) {
+          return false
+        }
     }
 }

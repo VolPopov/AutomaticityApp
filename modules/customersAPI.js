@@ -263,8 +263,7 @@ export class CustomersAPI {
          expect(responseJSON.message).toBe(message)
          break;
       }
-    }
-        
+    }   
     return responseJSON;     
   }
 
